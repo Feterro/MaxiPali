@@ -45,7 +45,7 @@ los pasillos. Base de la estructura creada con archivos
 
     bool arbolVacio() { return raiz == NULL; }
     arbolPas ListaBase();
-    void InsertaBinario(pnodoPas raiz,string cod, string nombre);
+    void InsertaBinario(pnodoPas aux,string cod, string nombre);
 
    friend class listaDCPro;
    friend class listaSimple;
@@ -60,7 +60,7 @@ void arbolPas::InordenR(pnodoPas R){
         InordenR(R->hDer);
     }
 }
-void arbolPas::InsertaBinario(pnodoPas raiz,string cod, string nombre)
+void arbolPas::InsertaBinario(pnodoPas aux,string cod, string nombre)
 {
     cout<<cod<<endl;
     cout<<nombre<<endl;
@@ -74,24 +74,24 @@ void arbolPas::InsertaBinario(pnodoPas raiz,string cod, string nombre)
     }
     else{
         cout<<"no estaba vacio"<<endl;
-        stringstream codRa(raiz->codPasillo);
+        stringstream codRa(aux->codPasillo);
         int valRa;
         codRa>>valRa;
         if(valor<valRa){//no acepta valores repetidos
             cout<<"va pa la izq"<<endl;
-            if(raiz->hIzq==NULL){
-                raiz-> hIzq = new nodoPasillo(cod, nombre);
+            if(aux->hIzq==NULL){
+                aux-> hIzq = new nodoPasillo(cod, nombre);
                 //cout<<": "<<arbol.raiz->codPasillo<<endl;
             }else{
-                InsertaBinario(raiz->hIzq,cod, nombre);
+                InsertaBinario(aux->hIzq,cod, nombre);
             }
         }else if(valor>valRa){
             cout<<"va pa la der"<<endl;
-            if(raiz->hDer==NULL){
+            if(aux->hDer==NULL){
                 cout<<"se inserta"<<endl;
-                raiz->hDer = new nodoPasillo(cod, nombre);
+                aux->hDer = new nodoPasillo(cod,nombre);
             }else{
-                InsertaBinario(raiz->hDer,cod, nombre);
+                InsertaBinario(aux->hDer,cod, nombre);
             }
         }
     }
@@ -117,14 +117,9 @@ partir de archivos
         string cod=token;
         token = strtok(NULL,var);
         string nom=token;
-        bool rep=false;
-        cout<<nom<<" "<<cod<<endl;
+        bool rep=false;;
         pasillos.InsertaBinario(pasillos.raiz,cod, nom);
-
     }
-    cout<<"Hola2"<<endl;
-    pnodoPas aux=pasillos.raiz;
-    //cout<<pasillos.raiz->nombre<<" "<<pasillos.raiz->hIzq->nombre<<endl;
     pasillos.InordenR(pasillos.raiz);
     archivo.close();
     return pasillos;
