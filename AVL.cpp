@@ -39,14 +39,14 @@ public:
     void RotacionSimpleDerecha(nodo *n1, nodo *n2);
 };
 void AVL::InordenR(pnodo R){
-    cout<<"trytgui"<<endl;
+    //cout<<"trytgui"<<endl;
     if(R==NULL){
-        cout<<"GDSHDGHJAS"<<endl;
+        //cout<<"GDSHDGHJAS"<<endl;
         return;
     }else{
-        cout<<"kljjfgf"<<endl;
+        //cout<<"kljjfgf"<<endl;
         InordenR(R->hIzq);
-        cout<<R->valor<<endl;
+        cout<<R->valor<<"||";
         InordenR(R->hDer);
     }
 }
@@ -59,14 +59,17 @@ void AVL::InsertarBalanceado(nodo *aux,nodo *ra, bool Hh, int x){
         return;
     }
     else if(aux==NULL&&raiz!=NULL){
-        raiz->hDer=new nodo(x);
-        cout<<raiz->hDer->hDer<<endl;
+        if(x<ra->valor)
+            ra->hIzq=new nodo(x);
+        else if(x>ra->valor)
+            ra->hDer=new nodo(x);
+        //cout<<raiz->hDer->hDer<<endl;
         //cout<<"Otros: "<<->valor<<endl;
         Hh = true;
     }else{
         //cout<<"q as2"<<endl;
         if(x<aux->valor){
-            InsertarBalanceado(aux->hIzq,raiz, Hh, x);
+            InsertarBalanceado(aux->hIzq,aux, Hh, x);
 
         if(Hh){
             switch(aux->valor){
@@ -87,7 +90,7 @@ void AVL::InsertarBalanceado(nodo *aux,nodo *ra, bool Hh, int x){
         }
         }else{
             if(x>aux->valor){
-                InsertarBalanceado(aux->hDer,raiz, Hh, x);
+                InsertarBalanceado(aux->hDer,aux, Hh, x);
 
                 if(Hh){
                     switch(aux->FB){
@@ -184,9 +187,14 @@ void AVL::RotacionSimpleIzquierda(nodo* n, nodo* n1){
 int main(){
     AVL arbol;
     arbol.InsertarBalanceado(arbol.raiz,arbol.raiz, false, 10);
-    cout<<"raiz del arbol "<<arbol.raiz->valor<<endl;
+    //cout<<"raiz del arbol "<<arbol.raiz->valor<<endl;
     //cout<<"Vuelve"<<endl;
     arbol.InsertarBalanceado(arbol.raiz,arbol.raiz, false, 45);
+    arbol.InsertarBalanceado(arbol.raiz,arbol.raiz, false, 5);
+    arbol.InsertarBalanceado(arbol.raiz,arbol.raiz, false, 7);
+    arbol.InsertarBalanceado(arbol.raiz,arbol.raiz, false, 4);
+   arbol.InsertarBalanceado(arbol.raiz,arbol.raiz, false, 9);
+    cout<<"raiz del arbol: "<<arbol.raiz->valor<<endl;
     cout<<"hijo der: "<<arbol.raiz->hDer->valor<<endl;
     arbol.InordenR(arbol.raiz);
     cout<<"Termina main"<<endl;
