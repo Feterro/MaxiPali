@@ -72,7 +72,7 @@ void AVL::InsertarBalanceado(nodo *aux,nodo *ra, bool Hh, int x){
             InsertarBalanceado(aux->hIzq,aux, Hh, x);
 
         if(Hh){
-            switch(aux->valor){
+            switch(aux->FB){
                 case 1: aux->FB=0;
                 Hh = false;
                 break;
@@ -189,10 +189,10 @@ int main(){
     arbol.InsertarBalanceado(arbol.raiz,arbol.raiz, false, 10);
     //cout<<"raiz del arbol "<<arbol.raiz->valor<<endl;
     //cout<<"Vuelve"<<endl;
-    arbol.InsertarBalanceado(arbol.raiz,arbol.raiz, false, 45);
+    arbol.InsertarBalanceado(arbol.raiz,arbol.raiz, false, 4);
     arbol.InsertarBalanceado(arbol.raiz,arbol.raiz, false, 5);
     arbol.InsertarBalanceado(arbol.raiz,arbol.raiz, false, 7);
-    arbol.InsertarBalanceado(arbol.raiz,arbol.raiz, false, 4);
+    arbol.InsertarBalanceado(arbol.raiz,arbol.raiz, false, 47);
    arbol.InsertarBalanceado(arbol.raiz,arbol.raiz, false, 9);
     cout<<"raiz del arbol: "<<arbol.raiz->valor<<endl;
     cout<<"hijo der: "<<arbol.raiz->hDer->valor<<endl;
