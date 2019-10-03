@@ -43,6 +43,7 @@ public:
         codProducto=codPro;
         hIzq=NULL;
         hDer=NULL;
+        siguiente=NULL;
     }
 private:
     int FB;
@@ -51,7 +52,9 @@ private:
     string codProducto;
     nodoProducto *hIzq;
     nodoProducto *hDer;
+    nodoProducto *siguiente;
 
+   friend class lista;
    friend class AVLProducto;
 };
 typedef nodoProducto *pnodoProd;
@@ -76,15 +79,74 @@ los pasillos. Base de la estructura creada con archivos
    public:
     pnodoPas raiz;
     arbolPas():raiz(NULL){}
-
    // void PreordenI();
     void InordenI(pnodoPas raiz);
    // void PostordenI();
-
     bool arbolVacio() { return raiz == NULL; }
     arbolPas ListaBase();
     void InsertaBinario(pnodoPas raiz, string cod, string nombre);
 };
+
+class lista {
+   public:
+    lista() { primero = actual = NULL; }
+
+    void InsertarFinal(string codPas, string codPro, string nom);
+    bool ListaVacia() { return primero == NULL; }
+    int largoLista();
+    void Mostrar();
+    lista enlistarCodigos();
+
+   private:
+    pnodoProd primero;
+    pnodoProd actual;
+};
+int lista::largoLista(){
+    int cont=0;
+
+    pnodoProd aux;
+    aux = primero;
+    if(ListaVacia()){
+        return cont;
+    }else{
+        while(aux!=NULL){
+        aux=aux->siguiente;
+        cont++;
+    }
+    return cont;
+    }
+
+}
+void lista::InsertarFinal(string codPas, string codPro, string nom)
+{
+   if (ListaVacia())
+     primero = new nodoProducto(codPas,codPro,nom);
+   else
+     { pnodoProd aux = primero;
+        while ( aux->siguiente != NULL)
+          aux= aux->siguiente;
+        aux->siguiente=new nodoProducto(codPas,codPro,nom);
+      }
+}
+void lista::Mostrar()
+{
+   nodoProducto *aux;
+   if (primero== NULL)
+       cout << "No hay elementos";
+   else
+   {
+
+
+   		aux = primero;
+		while(aux)
+		{
+		    cout <<aux->codPasillo<<"~"<<aux->codProducto<<"~"<<aux->nombre<< "-> ";
+		    aux = aux->siguiente;
+		}
+		cout << endl;
+   }
+}
+
 void arbolPas::InordenI(pnodoPas R){
     if(R==NULL){
         return;
@@ -286,19 +348,15 @@ void AVLProducto::RotacionSimpleIzquierda(nodoProducto* n, nodoProducto* n1){
     }
     n=n1;
 }
-listaDCpas listaDCpas::SublistaPro()
-{
-/*
-Metodo que agrega productos a los pasillos
-*/
 
-    arbolPas lista;
-    listaDCpas listabas=lista.ListaBase();
+lista lista::enlistarCodigos(){
+    lista listaAlm;
     ifstream archivo;
     string texto;
     archivo.open("ProductosPasillos.txt",ios::in);
     while(!archivo.eof())
     {
+        cout<<"ciclo"<<endl;
         getline(archivo, texto);
         char cstr[texto.size() + 1];
         strcpy(cstr, texto.c_str());
@@ -309,68 +367,119 @@ Metodo que agrega productos a los pasillos
         string codPro=token;
         token = strtok(NULL,var);
         string nom=token;
-        pnodo aux=listabas.primeroPas;
-        int cont=1;
-        while(aux->siguiente!=listabas.primeroPas||cont==listabas.largoLista())
+        bool rep=false;
+        if(!listaAlm.ListaVacia())
         {
-            if(aux->codPasillo==codPas)
+            cout<<"siay nada"<<endl;
+            pnodoProd aux=listaAlm.primero;
+            for(int i=0; i<listaAlm.largoLista(); i++)
             {
-                if(aux->subsiguiente!=NULL)
-                {
-                    bool rep=false;
-                    pnodo2 aux2=aux->subsiguiente;
-                    while(aux2->siguiente!=aux->subsiguiente)
-                    {
-                        if(aux2->siguiente->codProducto==codPro){
-                            rep=true;
-                            break;}
-					 	if(aux2->codProducto==codPro){
-                            rep=true;
-                            break;
-                        }
-                    aux2=aux2->siguiente;
-                    }
-                    if(aux->subsiguiente->siguiente==aux->subsiguiente)
-                    {
-                        if(aux2->codProducto==codPro)
-                            rep=true;
-                	}
-                    if(rep==true)
-                    {
-                        cout<< "Ya existe un producto con el codigo "<< codPro<<endl;
-                        aux=listabas.primeroPas;
-                        break;
-                	}
-                    if (rep==false)
-                    {
-                        pnodo2 nuevo = new nodoProducto(codPas, nom, codPro);
-                        nuevo->anterior = aux->subsiguiente->anterior;
-                        nuevo->siguiente=aux->subsiguiente;
-                        aux->subsiguiente->anterior->siguiente=nuevo;
-                        aux->subsiguiente->anterior=nuevo;
-                        break;
-                    }
+                cout<<"vuelto loko prro"<<codPro<<" "<<aux->codProducto<<endl;
+                if(aux->codProducto==codPro){
+                    rep=true;
+                    cout<<"cmamo"<<endl;
                 }
-                else
-                {
-                   aux->subsiguiente= new nodoProducto(codPas, nom, codPro);
-                   aux->subsiguiente->anterior=aux->subsiguiente;
-                   aux->subsiguiente->siguiente=aux->subsiguiente;
-                   break;
-            	}
+                aux=aux->siguiente;
             }
-            cont++;
-            aux=aux->siguiente;
+            if(rep==false)
+                listaAlm.InsertarFinal(codPas,codPro,nom);
+        }
+        else{
+          cout<<"nuai nada"<<endl;
+          listaAlm.InsertarFinal(codPas,codPro,nom);
         }
     }
-archivo.close();
-//listabas.MostrarTerc();
-return listabas;
+    listaAlm.Mostrar();
 }
+//listaDCpas listaDCpas::SublistaPro()
+//{
+///*
+//Metodo que agrega productos a los pasillos
+//*/
+//
+//    arbolPas lista;
+//    listaDCpas listabas=lista.ListaBase();
+//    ifstream archivo;
+//    string texto;
+//    archivo.open("ProductosPasillos.txt",ios::in);
+//    while(!archivo.eof())
+//    {
+//        getline(archivo, texto);
+//        char cstr[texto.size() + 1];
+//        strcpy(cstr, texto.c_str());
+//        char var[]=";";
+//        char *token = strtok(cstr,var);
+//        string codPas=token;
+//        token = strtok(NULL,var);
+//        string codPro=token;
+//        token = strtok(NULL,var);
+//        string nom=token;
+//        pnodo aux=listabas.primeroPas;
+//        int cont=1;
+//        while(aux->siguiente!=listabas.primeroPas||cont==listabas.largoLista())
+//        {
+//            if(aux->codPasillo==codPas)
+//            {
+//                if(aux->subsiguiente!=NULL)
+//                {
+//                    bool rep=false;
+//                    pnodo2 aux2=aux->subsiguiente;
+//                    while(aux2->siguiente!=aux->subsiguiente)
+//                    {
+//                        if(aux2->siguiente->codProducto==codPro){
+//                            rep=true;
+//                            break;}
+//					 	if(aux2->codProducto==codPro){
+//                            rep=true;
+//                            break;
+//                        }
+//                    aux2=aux2->siguiente;
+//                    }
+//                    if(aux->subsiguiente->siguiente==aux->subsiguiente)
+//                    {
+//                        if(aux2->codProducto==codPro)
+//                            rep=true;
+//                	}
+//                    if(rep==true)
+//                    {
+//                        cout<< "Ya existe un producto con el codigo "<< codPro<<endl;
+//                        aux=listabas.primeroPas;
+//                        break;
+//                	}
+//                    if (rep==false)
+//                    {
+//                        pnodo2 nuevo = new nodoProducto(codPas, nom, codPro);
+//                        nuevo->anterior = aux->subsiguiente->anterior;
+//                        nuevo->siguiente=aux->subsiguiente;
+//                        aux->subsiguiente->anterior->siguiente=nuevo;
+//                        aux->subsiguiente->anterior=nuevo;
+//                        break;
+//                    }
+//                }
+//                else
+//                {
+//                   aux->subsiguiente= new nodoProducto(codPas, nom, codPro);
+//                   aux->subsiguiente->anterior=aux->subsiguiente;
+//                   aux->subsiguiente->siguiente=aux->subsiguiente;
+//                   break;
+//            	}
+//            }
+//            cont++;
+//            aux=aux->siguiente;
+//        }
+//    }
+//archivo.close();
+////listabas.MostrarTerc();
+//return listabas;
+//}
 int main()
 {
+    lista lis;
     arbolPas pasillos;
     pasillos.ListaBase();
+    lis.enlistarCodigos();
+    cout<<endl;
+    cout<<"fin del main";
     cin.get();
     return 0;
 }
