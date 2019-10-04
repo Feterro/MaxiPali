@@ -99,6 +99,7 @@ class lista {
     int largoLista();
     void Mostrar();
     lista enlistarCodigos();
+    lista arbolProductos();
 
    private:
     pnodoProd primero;
@@ -350,19 +351,23 @@ void AVLProducto::RotacionSimpleIzquierda(nodoProducto* n, nodoProducto* n1){
     }
     n=n1;
 }
-void AVL::EnlaceAvl(nodoPasillo *nodoPas, nodoProducto *nodoPro){
+void AVLProducto::EnlaceAvl(nodoPasillo *nodoPas,nodoProducto *nodoPro){
     if(nodoPas==NULL){
         return;
     }else{
-        InordenI(nodoPas->hIzq, nodoPro);
+        EnlaceAvl(nodoPas->hIzq, nodoPro);
         if(nodoPas->codPasillo==nodoPro->codPasillo)
         {
-        	if(nodoPas->subsiguiente==NULL)
+        	if(nodoPas->subsiguiente==NULL){
         		nodoPas->subsiguiente=nodoPro;
-        	else
-
+        	}
+        	else{
+                AVLProducto ArbolEnla;
+                ArbolEnla.raiz=nodoPas->subsiguiente;
+                ArbolEnla.InsertarBalanceado(ArbolEnla.raiz, ArbolEnla.raiz, false,nodoPro->codPasillo,nodoPro->codProducto,nodoPro->nombre);
+        	}
 		}
-        InordenI(nodoPas->hDer, nodoPro);
+        EnlaceAvl(nodoPas->hDer, nodoPro);
     }
 }
 lista lista::enlistarCodigos(){
@@ -406,13 +411,17 @@ lista lista::enlistarCodigos(){
         }
     }
     //listaAlm.Mostrar();
-    return ListaAlm
+    return listaAlm;
 }
-lista lista::enlistarCodigos(){
+lista lista::arbolProductos(){
 	lista listaCod;
 	listaCod.enlistarCodigos();
 	arbolPas arbolPasillo;
 	arbolPasillo.ListaBase();
+	for(int i=0; i<=listaCod.largoLista();i++)
+    {
+        arbolPasillo.
+    }
 
 }
 int main()
