@@ -73,6 +73,8 @@ public:
     void RotacionSimpleIzquierda(nodoProducto *n1, nodoProducto *n2);
     void RotacionSimpleDerecha(nodoProducto *n1, nodoProducto *n2);
     void EnlaceAvl(nodoPasillo *nodoPas,nodoProducto *nodoPro);
+
+    friend class lista;
 };
 class arbolPas {
 /*
@@ -414,13 +416,16 @@ lista lista::enlistarCodigos(){
     return listaAlm;
 }
 lista lista::arbolProductos(){
+    AVLProducto arbolProd;
 	lista listaCod;
 	listaCod.enlistarCodigos();
 	arbolPas arbolPasillo;
 	arbolPasillo.ListaBase();
+	pnodoPas aux=listaCod.primero;
 	for(int i=0; i<=listaCod.largoLista();i++)
     {
-        arbolPasillo.
+        arbolProd.EnlaceAvl(arbolPasillo.raiz, aux)
+        aux=aux->s
     }
 
 }
