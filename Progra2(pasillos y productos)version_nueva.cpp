@@ -20,13 +20,14 @@ public:
         hDer=NULL;
         siguiente=NULL;
     }
+    string nombre;
+    nodoProducto *hIzq;
+    nodoProducto *hDer;
+
 private:
     int FB;
     string codPasillo;
-    string nombre;
     string codProducto;
-    nodoProducto *hIzq;
-    nodoProducto *hDer;
     nodoProducto *siguiente;
 
    friend class lista;
@@ -73,6 +74,8 @@ public:
     void RotacionSimpleIzquierda(nodoProducto *n1, nodoProducto *n2);
     void RotacionSimpleDerecha(nodoProducto *n1, nodoProducto *n2);
     void EnlaceAvl(nodoPasillo *nodoPas,nodoProducto *nodoPro);
+    void InordenPro(pnodoProd R);
+    AVLProducto arbolProductos();
 
     friend class lista;
 };
@@ -87,6 +90,7 @@ los pasillos. Base de la estructura creada con archivos
     arbolPas():raiz(NULL){}
    // void PreordenI();
     void InordenI(pnodoPas raiz);
+    void InordenDoble(pnodoPas R);
    // void PostordenI();
     bool arbolVacio() { return raiz == NULL; }
     arbolPas ListaBase();
@@ -101,11 +105,12 @@ class lista {
     int largoLista();
     void Mostrar();
     lista enlistarCodigos();
-    lista arbolProductos();
+
 
    private:
     pnodoProd primero;
     pnodoProd actual;
+    friend class AVLProducto;
 };
 int lista::largoLista(){
     int cont=0;
@@ -212,7 +217,7 @@ partir de archivos
         bool rep=false;;
         pasillos.InsertaBinario(pasillos.raiz,cod, nom);
     }
-    pasillos.InordenI(pasillos.raiz);
+    //pasillos.InordenI(pasillos.raiz);
     archivo.close();
     return pasillos;
 }
@@ -224,6 +229,10 @@ void AVLProducto::InsertarBalanceado(nodoProducto *aux, nodoProducto *ra, bool H
     int codProduAux;
     if(aux!=NULL){
         stringstream cpa(aux->codProducto);
+        cpa>>codProduAux;
+    }
+    else{
+        stringstream cpa(ra->codProducto);
         cpa>>codProduAux;
     }
     if(raiz==NULL){
@@ -254,8 +263,12 @@ void AVLProducto::InsertarBalanceado(nodoProducto *aux, nodoProducto *ra, bool H
                 case -1: n1=aux->hIzq;
                 if(n1->FB==-1){
                     RotacionSimpleIzquierda(aux, n1);
+                    if(aux->codProducto==raiz->codProducto)
+                        raiz=n1;
                 }else{
                     RotacionDobleIzquierda(aux,n1);
+                    if(aux->codProducto==raiz->codProducto)
+                        raiz=n1;
                 }
                 Hh = false;
                 break;
@@ -274,8 +287,12 @@ void AVLProducto::InsertarBalanceado(nodoProducto *aux, nodoProducto *ra, bool H
                         case 1:n1=aux->hDer;
                         if(n1->FB==1){
                             RotacionSimpleDerecha(aux, n1);
+                            if(aux->codProducto==raiz->codProducto)
+                                raiz=n1;
                         }else{
                             RotacionDobleDerecha(aux, n1);
+                            if(aux->codProducto==raiz->codProducto)
+                                raiz=n1;
                         }
                         Hh=false;
                         break;
@@ -340,6 +357,7 @@ void AVLProducto::RotacionSimpleDerecha(nodoProducto* n, nodoProducto* n1){
     }
     n=n1;
 }
+
 void AVLProducto::RotacionSimpleIzquierda(nodoProducto* n, nodoProducto* n1){
     n->hIzq=n1->hDer;
     n1->hDer=n;
@@ -353,23 +371,25 @@ void AVLProducto::RotacionSimpleIzquierda(nodoProducto* n, nodoProducto* n1){
     }
     n=n1;
 }
-void AVLProducto::EnlaceAvl(nodoPasillo *nodoPas,nodoProducto *nodoPro){
-    if(nodoPas==NULL){
+void AVLProducto::InordenPro(pnodoProd R){
+    if(R==NULL){
         return;
     }else{
-        EnlaceAvl(nodoPas->hIzq, nodoPro);
-        if(nodoPas->codPasillo==nodoPro->codPasillo)
-        {
-        	if(nodoPas->subsiguiente==NULL){
-        		nodoPas->subsiguiente=nodoPro;
-        	}
-        	else{
-                AVLProducto ArbolEnla;
-                ArbolEnla.raiz=nodoPas->subsiguiente;
-                ArbolEnla.InsertarBalanceado(ArbolEnla.raiz, ArbolEnla.raiz, false,nodoPro->codPasillo,nodoPro->codProducto,nodoPro->nombre);
-        	}
-		}
-        EnlaceAvl(nodoPas->hDer, nodoPro);
+        InordenPro(R->hIzq);
+        cout<<R->codPasillo<<"~"<<R->codProducto<<R->nombre<<"/";
+        InordenPro(R->hDer);
+    }
+}
+void arbolPas::InordenDoble(pnodoPas R){
+    if(R==NULL){
+        return;
+    }else{
+        InordenDoble(R->hIzq);
+        cout<<"||"<<R->codPasillo<<"~"<<R->nombre<<"|||";
+        AVLProducto pro;
+        pro.raiz=R->subsiguiente;
+        pro.InordenPro(R->subsiguiente);
+        InordenDoble(R->hDer);
     }
 }
 lista lista::enlistarCodigos(){
@@ -415,26 +435,49 @@ lista lista::enlistarCodigos(){
     //listaAlm.Mostrar();
     return listaAlm;
 }
-lista lista::arbolProductos(){
-    AVLProducto arbolProd;
-	lista listaCod;
-	listaCod.enlistarCodigos();
-	arbolPas arbolPasillo;
-	arbolPasillo.ListaBase();
-	pnodoPas aux=listaCod.primero;
-	for(int i=0; i<=listaCod.largoLista();i++)
-    {
-        arbolProd.EnlaceAvl(arbolPasillo.raiz, aux)
-        aux=aux->s
+void AVLProducto::EnlaceAvl(nodoPasillo *nodoPas,nodoProducto *nodoPro){
+    if(nodoPas==NULL){
+        return;
+    }else{
+        EnlaceAvl(nodoPas->hIzq, nodoPro);
+        if(nodoPas->codPasillo==nodoPro->codPasillo)
+        {
+        	if(nodoPas->subsiguiente==NULL){
+        		nodoPas->subsiguiente=nodoPro;
+        	}
+        	else{
+                AVLProducto ArbolEnla;
+                ArbolEnla.raiz=nodoPas->subsiguiente;
+                ArbolEnla.InsertarBalanceado(ArbolEnla.raiz, ArbolEnla.raiz, false,nodoPro->codPasillo,nodoPro->codProducto,nodoPro->nombre);
+        	}
+		}
+        EnlaceAvl(nodoPas->hDer, nodoPro);
     }
-
 }
+
+AVLProducto AVLProducto::arbolProductos(){
+//    AVLProducto arbolProd;
+	lista listaCod;
+	listaCod=listaCod.enlistarCodigos();
+	arbolPas arbolPasillo;
+	arbolPasillo=arbolPasillo.ListaBase();
+	pnodoProd aux=listaCod.primero;
+	for(int i=0; i<listaCod.largoLista();i++)
+    {
+        EnlaceAvl(arbolPasillo.raiz, aux);
+        aux=aux->siguiente;
+    }
+    arbolPasillo.InordenDoble(arbolPasillo.raiz);
+}
+
 int main()
 {
-    lista lis;
-    arbolPas pasillos;
-    pasillos.ListaBase();
-    lis.enlistarCodigos();
+//    lista lis;
+//    arbolPas pasillos;
+//    pasillos.ListaBase();
+//    lis.enlistarCodigos();
+    AVLProducto arbol;
+    arbol.arbolProductos();
     cout<<endl;
     cout<<"fin del main";
     cin.get();
