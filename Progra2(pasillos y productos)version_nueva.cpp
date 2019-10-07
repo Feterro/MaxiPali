@@ -47,6 +47,8 @@ Clase amiga de lista marcas y la clase principal.
     nodoMarca *siguiente;
     Color color;
 
+   friend class AVLProducto;
+   friend class arbolPas;
    friend class RN;
    friend class lista;
 };
@@ -132,7 +134,7 @@ los pasillos. Base de la estructura creada con archivos
     bool arbolVacio() { return raiz == NULL; }
     arbolPas ListaBase();
     void InsertaBinario(pnodoPas raiz, string cod, string nombre);
-    pnodoPas busquedaPro(nodoPasillo *nodoPas,string codPasillo);
+    nodoProducto* busquedaPro(nodoPasillo *nodoPas,nodoMarca* nodMar);
     arbolPas arbolProductos();
 };
 class AVLProducto{
@@ -148,6 +150,7 @@ public:
     void RotacionSimpleDerecha(nodoProducto *n1, nodoProducto *n2);
     void EnlaceAvl(nodoPasillo *nodoPas,nodoProducto *nodoPro);
     void InordenPro(pnodoProd R);
+    void EnlaceRN(nodoProducto *nodoPro, nodoMarca *nodoMar);
 
     friend class lista;
 };
@@ -189,7 +192,6 @@ public:
 	void levelOrder();
 	pnodoMarca insertarNodo(pnodoMarca raiz, pnodoMarca pt);
 	void InordenMar(pnodoMarca R);
-	void EnlaceRN(nodoProducto *nodoPro, nodoMarca *nodoMar);
 	RN arbolMarcas();
 
 };
@@ -268,6 +270,7 @@ void RN::rotarDerecha(nodoMarca *&raiz, nodoMarca *&pt)
 
 void RN::balancearArbol(nodoMarca *&raiz, nodoMarca *&pt)
 {
+    cout<<"llega"<<endl;
 	pnodoMarca padre_pt = NULL;
 	pnodoMarca abuelo_pt = NULL;
 
@@ -793,18 +796,18 @@ lista lista::enlistarCodigosMar(){
                 aux=aux->siguiente;
             }
             if(rep==false)
-                listaAlm.InsertarFinalMar(codPas,codPro,codMar,nom,cantGond,precio);
+                listaAlm.InsertarFinalMar(codPas,nom,codPro,codMar,cantGond,precio);
         }
         else{
           //cout<<"nuai nada"<<endl;
-          listaAlm.InsertarFinalMar(codPas,codPro,codMar,nom,cantGond,precio);
+          listaAlm.InsertarFinalMar(codPas,nom,codPro,codMar,cantGond,precio);
         }
     }
-    //listaAlm.MostrarMar();
+    listaAlm.MostrarMar();
     return listaAlm;
 }
 
-void RN::EnlaceRN(nodoProducto *nodoPro, nodoMarca *nodoMar){
+void AVLProducto::EnlaceRN(nodoProducto *nodoPro, nodoMarca *nodoMar){
     if(nodoPro==NULL){
         return;
     }else{
@@ -824,15 +827,24 @@ void RN::EnlaceRN(nodoProducto *nodoPro, nodoMarca *nodoMar){
         EnlaceRN(nodoPro->hDer, nodoMar);
     }
 }
-pnodoPas arbolPas::busquedaPro(nodoPasillo *nodoPas,string codPasillo){
+nodoProducto* arbolPas::busquedaPro(nodoPasillo *nodoPas,nodoMarca* nodoMar){
     if(nodoPas==NULL){
-        return NULL;
+        cout<<"nulo"<<endl;
     }else{
-        cout<<"nusc"<<nodoPas->nombre;
-        busquedaPro(nodoPas->hIzq, codPasillo);
-        if(nodoPas->codPasillo==codPasillo)
-            return nodoPas;
-        busquedaPro(nodoPas->hDer, codPasillo);
+        busquedaPro(nodoPas->hIzq, nodoMar);
+        if(nodoPas->codPasillo==nodoMar->codPasillo)
+        {
+        	if(nodoPas->subsiguiente==NULL){
+                cout<<"nulo"<<endl;
+        	}
+        	else{
+                cout<<nodoPas->codPasillo<<nodoMar->codPasillo<<endl;
+                AVLProducto arbol;
+                arbol.raiz=nodoPas->subsiguiente;
+        	    arbol.EnlaceRN(nodoPas->subsiguiente,nodoMar);
+        	}
+		}
+        busquedaPro(nodoPas->hDer, nodoMar);
     }
 }
 
@@ -843,14 +855,16 @@ RN RN::arbolMarcas(){
 	listaCod=listaCod.enlistarCodigosMar();
 	arbolPas arbolPasillo;
 	arbolPasillo=arbolPasillo.arbolProductos();
+    arbolPasillo.InordenTriple(arbolPasillo.raiz);
 	pnodoMarca aux=listaCod.primeroMar;
-	pnodoPas encont;
 	for(int i=0; i<listaCod.largoListaMar();i++)
     {
-        encont=arbolPasillo.busquedaPro(arbolPasillo.raiz, aux->codPasillo);
-        cout<<"nom"<<encont->nombre;
-        EnlaceRN(encont->subsiguiente,aux);
-        aux=aux->siguiente;
+        cout<<aux->nombre<<endl;
+       pnodoProd encont=arbolPasillo.busquedaPro(arbolPasillo.raiz, aux);
+        cout<<"sale"<<endl;
+//        cout<<"encont "<<encont->nombre<<endl;
+//        EnlaceRN(encont->subsiguiente,aux);
+       aux=aux->siguiente;
     }
     arbolPasillo.InordenTriple(arbolPasillo.raiz);
 }
