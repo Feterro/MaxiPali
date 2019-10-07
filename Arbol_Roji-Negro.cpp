@@ -4,61 +4,100 @@ enum Color {
     ROJO,
     NEGRO
 };
-class nodo {
-public:
-    nodo(int v)
+
+class nodoMarca {
+   public:
+    nodoMarca(string codPas, string nom, string codPro, string codMar, int cantGon, float val)
     {
-        valor = v;
+        codPasillo=codPas;
+        nombre=nom;
+        codProducto=codPro;
+        codMarca=codMar;
+        cantGondola=cantGon;
+        precio=val;
+        cantcomp=0;
         hIzq = NULL;
         hDer = NULL;
         padre=NULL;
         color=ROJO;
     }
-private:
-    int valor;
-    nodo *hIzq;
-    nodo *hDer;
-    nodo *padre;s
+   private:
+    string codPasillo;
+    string nombre;
+    string codProducto;
+    string codMarca;
+    int cantGondola;
+    float precio;
+    int cantcomp;
+    nodoMarca *hIzq;
+    nodoMarca *hDer;
+    nodoMarca *padre;
     Color color;
 
-friend class RN;
+   friend class RN;
 };
-typedef nodo*pnodo;
+
+//class nodo {
+//public:
+//    nodo(int v)
+//    {
+//        valor = v;
+//        hIzq = NULL;
+//        hDer = NULL;
+//        padre=NULL;
+//        color=ROJO;
+//    }
+//private:
+//    int valor;
+//    nodo *hIzq;
+//    nodo *hDer;
+//    nodo *padre;
+//    Color color;
+//
+//friend class RN;
+//};
+
+typedef nodoMarca*pnodoMarca;
+
 class RN{
 public:
-    nodo *raiz;
+    nodoMarca *raiz;
 	RN() { raiz = NULL; }
-	void rotarIzquierda(nodo *&, nodo *&);
-	void rotarDerecha(nodo *&, nodo *&);
-	void balancearArbol(nodo *&, nodo *&);
-	void insert(const int &n);
+	void rotarIzquierda(nodoMarca *&, nodoMarca *&);
+	void rotarDerecha(nodoMarca *&, nodoMarca *&);
+	void balancearArbol(nodoMarca *&, nodoMarca *&);
+	void insert(const string &codPasilo,const string &nombre,const string &codProducto,const string &codMar,const int &gon, const float &val);
 	void inorder();
 	void levelOrder();
-	pnodo insertarNodo(pnodo raiz, pnodo pt);
-	void InordenR(pnodo ra);
-
+	pnodoMarca insertarNodo(pnodoMarca raiz, pnodoMarca pt);
+	void InordenR(pnodoMarca ra);
 };
 
-void RN::InordenR(pnodo R){
+void RN::InordenR(pnodoMarca R){
     if(R==NULL){
         return;
     }else{
         InordenR(R->hIzq);
-        cout<<R->valor<<"||";
+        cout<<R->codPasillo<<"~"<<R->codProducto<<"~"<<R->codMarca<<"~"<<R->nombre<<"~"<<R->cantGondola<<"~"<<R->precio<<"||";
         InordenR(R->hDer);
     }
 }
 
-pnodo RN::insertarNodo(pnodo raiz, pnodo pt){
+pnodoMarca RN::insertarNodo(pnodoMarca raiz, pnodoMarca pt){
 	if (raiz == NULL)
-	return pt;
-
-	if (pt->valor<raiz->valor)
+        return pt;
+    int codRaiz;
+    stringstream codtrans(raiz->codMarca);
+    codtrans>>codRaiz;
+    int codIns;
+    stringstream codtrans2(pt->codMarca);
+    codtrans2>>codIns;
+	if (codIns<codRaiz)
 	{
 		raiz->hIzq = insertarNodo(raiz->hIzq, pt);
 		raiz->hIzq->padre = raiz;
 	}
-	else if (pt->valor > raiz->valor)
+	else if (codIns > codRaiz)
 	{
 		raiz->hDer = insertarNodo(raiz->hDer, pt);
 		raiz->hDer->padre = raiz;
@@ -68,9 +107,9 @@ pnodo RN::insertarNodo(pnodo raiz, pnodo pt){
     }
 	return raiz;
 }
-void RN::rotarIzquierda(nodo *&raiz, nodo *&pt)
+void RN::rotarIzquierda(nodoMarca *&raiz, nodoMarca *&pt)
 {
-	pnodo pt_hDer = pt->hDer;
+	pnodoMarca pt_hDer = pt->hDer;
 
 	pt->hDer = pt_hDer->hIzq;
 
@@ -92,9 +131,9 @@ void RN::rotarIzquierda(nodo *&raiz, nodo *&pt)
 	pt->padre = pt_hDer;
 }
 
-void RN::rotarDerecha(nodo *&raiz, nodo *&pt)
+void RN::rotarDerecha(nodoMarca *&raiz, nodoMarca *&pt)
 {
-	pnodo pt_hIzq = pt->hIzq;
+	pnodoMarca pt_hIzq = pt->hIzq;
 
 	pt->hIzq = pt_hIzq->hDer;
 
@@ -116,10 +155,10 @@ void RN::rotarDerecha(nodo *&raiz, nodo *&pt)
 	pt->padre = pt_hIzq;
 }
 
-void RN::balancearArbol(nodo *&raiz, nodo *&pt)
+void RN::balancearArbol(nodoMarca *&raiz, nodoMarca *&pt)
 {
-	pnodo padre_pt = NULL;
-	pnodo abuelo_pt = NULL;
+	pnodoMarca padre_pt = NULL;
+	pnodoMarca abuelo_pt = NULL;
 
 	while ((pt != raiz) && (pt->color != NEGRO) &&
 		(pt->padre->color == ROJO))
@@ -129,7 +168,7 @@ void RN::balancearArbol(nodo *&raiz, nodo *&pt)
 		abuelo_pt = pt->padre->padre;
 		if (padre_pt == abuelo_pt->hIzq)
 		{
-			pnodo tio_pt = abuelo_pt->hDer;
+			pnodoMarca tio_pt = abuelo_pt->hDer;
 			if (tio_pt != NULL && tio_pt->color == ROJO)
 			{
 				abuelo_pt->color = ROJO;
@@ -152,7 +191,7 @@ void RN::balancearArbol(nodo *&raiz, nodo *&pt)
 		}
 		else
 		{
-			pnodo tio_pt = abuelo_pt->hIzq;
+			pnodoMarca tio_pt = abuelo_pt->hIzq;
 			if ((tio_pt != NULL) && (tio_pt->color == ROJO))
 			{
 				abuelo_pt->color = ROJO;
@@ -177,9 +216,9 @@ void RN::balancearArbol(nodo *&raiz, nodo *&pt)
 
 	raiz->color = NEGRO;
 }
-void RN::insert(const int &num)
+void RN::insert(const string &codPasilo,const string &nombre,const string &codProducto,const string &codMar,const int &gon, const float &val)
 {
-	pnodo pt = new nodo(num);
+	pnodoMarca pt = new nodoMarca(codPasilo,nombre,codProducto,codMar,gon,val);
 	raiz = insertarNodo(raiz, pt);
 	balancearArbol(raiz, pt);
 }
@@ -188,15 +227,25 @@ int main()
 {
 	RN RojiNegro;
 
-	RojiNegro.insert(74);
-	RojiNegro.insert(6);
-	RojiNegro.insert(5);
-	RojiNegro.insert(14);
-	RojiNegro.insert(32);
-	RojiNegro.insert(74);
-	RojiNegro.insert(10);
+	RojiNegro.insert("20","luisiana","45","75",4,3.5);
+	RojiNegro.insert("21","del monte","46","21",5,3.6);
+	RojiNegro.insert("22","luisiana","47","1",6,3.7);
+//	cout<<RojiNegro.raiz->valor<<endl;
+	RojiNegro.insert("23","luisiana","48","34",7,3.8);
+	RojiNegro.insert("24","luisiana","49","18",8,3.9);
+//	RojiNegro.insert(57);
+//	RojiNegro.insert(8);
+//	RojiNegro.insert(95);
+//	RojiNegro.insert(1);
+//	RojiNegro.insert(23);
+//	RojiNegro.insert(47);
+//	RojiNegro.insert(18);
+//	RojiNegro.insert(1024);
+//	RojiNegro.insert(37);
+//	RojiNegro.insert(41);
 	cout<<"Inorden: ";
 	RojiNegro.InordenR(RojiNegro.raiz);
 
+    cin.get();
 	return 0;
 }

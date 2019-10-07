@@ -3,13 +3,60 @@
 #include <cstring>
 #include <string>
 #include <sstream>
+#include <bits/stdc++.h>
 using namespace std;
+enum Color {
+    ROJO,
+    NEGRO
+};
+
+class nodoMarca {
+/*
+Clase que construye los objetos de tipo nodo donde se
+gurdan los datos de las marcas de los productos.
+Clase amiga de lista marcas y la clase principal.
+*/
+
+   public:
+    nodoMarca(string codPas, string nom, string codPro, string codMar, int cantGon, float val)
+    {
+        codPasillo=codPas;
+        nombre=nom;
+        codProducto=codPro;
+        codMarca=codMar;
+        cantGondola=cantGon;
+        precio=val;
+        cantcomp=0;
+        hIzq = NULL;
+        hDer = NULL;
+        padre=NULL;
+        siguiente=NULL;
+        color=ROJO;
+    }
+   private:
+    string codPasillo;
+    string nombre;
+    string codProducto;
+    string codMarca;
+    int cantGondola;
+    float precio;
+    int cantcomp;
+    nodoMarca *hIzq;
+    nodoMarca *hDer;
+    nodoMarca *padre;
+    nodoMarca *siguiente;
+    Color color;
+
+   friend class RN;
+   friend class lista;
+};
+typedef nodoMarca*pnodoMarca;
+class nodoProducto {
 /*
 Clase creadora de nodos de productos para ser
 enlazado a los nodos de pasillo . Clase amiga
  de listaDCpas,listaSimple.
 */
-class nodoProducto {
 public:
     nodoProducto(string codPas,string codPro, string nom)
     {
@@ -19,17 +66,21 @@ public:
         hIzq=NULL;
         hDer=NULL;
         siguiente=NULL;
+        subsiguiente=NULL;
     }
+
+
+private:
     string nombre;
     nodoProducto *hIzq;
     nodoProducto *hDer;
-
-private:
     int FB;
     string codPasillo;
     string codProducto;
     nodoProducto *siguiente;
+    nodoMarca *subsiguiente;
 
+   friend class RN;
    friend class lista;
    friend class AVLProducto;
 };
@@ -62,23 +113,6 @@ listaSimple y nodoCarrito
    friend class AVLProducto;
 };
 typedef nodoPasillo *pnodoPas;
-class AVLProducto{
-public:
-    pnodoProd raiz;
-    AVLProducto():raiz(NULL){}
-    bool Hh;
-    void InordenR(pnodoProd raiz);
-    void InsertarBalanceado(nodoProducto *r, nodoProducto *r2, bool Hh, string codPas, string codProd, string nomProd);
-    void RotacionDobleIzquierda(nodoProducto *n1, nodoProducto *n2);
-    void RotacionDobleDerecha(nodoProducto *n1, nodoProducto *n2);
-    void RotacionSimpleIzquierda(nodoProducto *n1, nodoProducto *n2);
-    void RotacionSimpleDerecha(nodoProducto *n1, nodoProducto *n2);
-    void EnlaceAvl(nodoPasillo *nodoPas,nodoProducto *nodoPro);
-    void InordenPro(pnodoProd R);
-    AVLProducto arbolProductos();
-
-    friend class lista;
-};
 class arbolPas {
 /*
 Clase creadora de listas donde se insertaran
@@ -96,28 +130,235 @@ los pasillos. Base de la estructura creada con archivos
     arbolPas ListaBase();
     void InsertaBinario(pnodoPas raiz, string cod, string nombre);
 };
+class AVLProducto{
+public:
+    pnodoProd raiz;
+    AVLProducto():raiz(NULL){}
+    bool Hh;
+    void InordenR(pnodoProd raiz);
+    void InsertarBalanceado(nodoProducto *r, nodoProducto *r2, bool Hh, string codPas, string codProd, string nomProd);
+    void RotacionDobleIzquierda(nodoProducto *n1, nodoProducto *n2);
+    void RotacionDobleDerecha(nodoProducto *n1, nodoProducto *n2);
+    void RotacionSimpleIzquierda(nodoProducto *n1, nodoProducto *n2);
+    void RotacionSimpleDerecha(nodoProducto *n1, nodoProducto *n2);
+    void EnlaceAvl(nodoPasillo *nodoPas,nodoProducto *nodoPro);
+    void InordenPro(pnodoProd R);
+    arbolPas arbolProductos();
+
+    friend class lista;
+};
 class lista {
    public:
-    lista() { primero = actual = NULL; }
+    lista() { primero = actual = NULL; primeroMar = actualMar= NULL; }
 
     void InsertarFinal(string codPas, string codPro, string nom);
+    void InsertarFinalMar(string codPas, string nom, string codPro, string codMar,int cantGon,float precio);
     bool ListaVacia() { return primero == NULL; }
+    bool ListaVaciaMar() { return primeroMar == NULL; }
     int largoLista();
+    int largoListaMar();
     void Mostrar();
+    void MostrarMar();
     lista enlistarCodigos();
+    lista enlistarCodigosMar();
 
 
    private:
     pnodoProd primero;
+    pnodoMarca primeroMar;
     pnodoProd actual;
+    pnodoMarca actualMar;
     friend class AVLProducto;
 };
+
+class RN{
+public:
+    nodoMarca *raiz;
+	RN() { raiz = NULL; }
+	void rotarIzquierda(nodoMarca *&, nodoMarca *&);
+	void rotarDerecha(nodoMarca *&, nodoMarca *&);
+	void balancearArbol(nodoMarca *&, nodoMarca *&);
+	void insert(const string &codPasilo,const string &nombre,const string &codProducto,const string &codMar,const int &gon, const float &val);
+	void inorder();
+	void levelOrder();
+	pnodoMarca insertarNodo(pnodoMarca raiz, pnodoMarca pt);
+	void InordenR(pnodoMarca ra);
+	void EnlaceRN(nodoProducto *nodoPro, nodoMarca *nodoMar);
+	RN arbolMarcas();
+
+};
+void RN::InordenR(pnodoMarca R){
+    if(R==NULL){
+        return;
+    }else{
+        InordenR(R->hIzq);
+        cout<<R->codPasillo<<"~"<<R->codProducto<<"~"<<R->codMarca<<"~"<<R->nombre<<"~"<<R->cantGondola<<"~"<<R->precio<<"||";
+        InordenR(R->hDer);
+    }
+}
+
+pnodoMarca RN::insertarNodo(pnodoMarca raiz, pnodoMarca pt){
+	if (raiz == NULL)
+        return pt;
+    int codRaiz;
+    stringstream codtrans(raiz->codMarca);
+    codtrans>>codRaiz;
+    int codIns;
+    stringstream codtrans2(pt->codMarca);
+    codtrans2>>codIns;
+	if (codIns<codRaiz)
+	{
+		raiz->hIzq = insertarNodo(raiz->hIzq, pt);
+		raiz->hIzq->padre = raiz;
+	}
+	else if (codIns > codRaiz)
+	{
+		raiz->hDer = insertarNodo(raiz->hDer, pt);
+		raiz->hDer->padre = raiz;
+	}
+	else {
+        return pt;
+    }
+	return raiz;
+}
+void RN::rotarIzquierda(nodoMarca *&raiz, nodoMarca *&pt)
+{
+	pnodoMarca pt_hDer = pt->hDer;
+
+	pt->hDer = pt_hDer->hIzq;
+
+	if (pt->hDer != NULL)
+		pt->hDer->padre = pt;
+
+	pt_hDer->padre = pt->padre;
+
+	if (pt->padre == NULL)
+		raiz = pt_hDer;
+
+	else if (pt == pt->padre->hIzq)
+		pt->padre->hIzq = pt_hDer;
+
+	else
+		pt->padre->hDer = pt_hDer;
+
+	pt_hDer->hIzq = pt;
+	pt->padre = pt_hDer;
+}
+
+void RN::rotarDerecha(nodoMarca *&raiz, nodoMarca *&pt)
+{
+	pnodoMarca pt_hIzq = pt->hIzq;
+
+	pt->hIzq = pt_hIzq->hDer;
+
+	if (pt->hIzq != NULL)
+		pt->hIzq->padre = pt;
+
+	pt_hIzq->padre = pt->padre;
+
+	if (pt->padre == NULL)
+		raiz = pt_hIzq;
+
+	else if (pt == pt->padre->hIzq)
+		pt->padre->hIzq = pt_hIzq;
+
+	else
+		pt->padre->hDer = pt_hIzq;
+
+	pt_hIzq->hDer = pt;
+	pt->padre = pt_hIzq;
+}
+
+void RN::balancearArbol(nodoMarca *&raiz, nodoMarca *&pt)
+{
+	pnodoMarca padre_pt = NULL;
+	pnodoMarca abuelo_pt = NULL;
+
+	while ((pt != raiz) && (pt->color != NEGRO) &&
+		(pt->padre->color == ROJO))
+	{
+
+		padre_pt = pt->padre;
+		abuelo_pt = pt->padre->padre;
+		if (padre_pt == abuelo_pt->hIzq)
+		{
+			pnodoMarca tio_pt = abuelo_pt->hDer;
+			if (tio_pt != NULL && tio_pt->color == ROJO)
+			{
+				abuelo_pt->color = ROJO;
+				padre_pt->color = NEGRO;
+				tio_pt->color = NEGRO;
+				pt = abuelo_pt;
+			}
+			else
+			{
+				if (pt == padre_pt->hDer)
+				{
+					rotarIzquierda(raiz, padre_pt);
+					pt = padre_pt;
+					padre_pt = pt->padre;
+				}
+				rotarDerecha(raiz, abuelo_pt);
+				swap(padre_pt->color, abuelo_pt->color);
+				pt = padre_pt;
+			}
+		}
+		else
+		{
+			pnodoMarca tio_pt = abuelo_pt->hIzq;
+			if ((tio_pt != NULL) && (tio_pt->color == ROJO))
+			{
+				abuelo_pt->color = ROJO;
+				padre_pt->color = NEGRO;
+				tio_pt->color = NEGRO;
+				pt = abuelo_pt;
+			}
+			else
+			{
+				if (pt == padre_pt->hIzq)
+				{
+					rotarDerecha(raiz, padre_pt);
+					pt = padre_pt;
+					padre_pt = pt->padre;
+				}
+				rotarIzquierda(raiz, abuelo_pt);
+				swap(padre_pt->color, abuelo_pt->color);
+				pt = padre_pt;
+			}
+		}
+	}
+
+	raiz->color = NEGRO;
+}
+void RN::insert(const string &codPasilo,const string &nombre,const string &codProducto,const string &codMar,const int &gon, const float &val)
+{
+	pnodoMarca pt = new nodoMarca(codPasilo,nombre,codProducto,codMar,gon,val);
+	raiz = insertarNodo(raiz, pt);
+	balancearArbol(raiz, pt);
+}
+
 int lista::largoLista(){
     int cont=0;
 
     pnodoProd aux;
     aux = primero;
     if(ListaVacia()){
+        return cont;
+    }else{
+        while(aux!=NULL){
+        aux=aux->siguiente;
+        cont++;
+    }
+    return cont;
+    }
+
+}
+int lista::largoListaMar(){
+    int cont=0;
+
+    pnodoMarca aux;
+    aux = primeroMar;
+    if(ListaVaciaMar()){
         return cont;
     }else{
         while(aux!=NULL){
@@ -139,6 +380,17 @@ void lista::InsertarFinal(string codPas, string codPro, string nom)
         aux->siguiente=new nodoProducto(codPas,codPro,nom);
       }
 }
+void lista::InsertarFinalMar(string codPas, string nom, string codPro, string codMar,int cantGon,float precio)
+{
+   if (ListaVaciaMar())
+     primeroMar = new nodoMarca(codPas, nom, codPro, codMar, cantGon, precio);
+   else
+     { pnodoMarca aux = primeroMar;
+        while ( aux->siguiente != NULL)
+          aux= aux->siguiente;
+        aux->siguiente=new nodoMarca(codPas, nom, codPro, codMar, cantGon, precio);
+      }
+}
 void lista::Mostrar()
 {
    nodoProducto *aux;
@@ -153,6 +405,24 @@ void lista::Mostrar()
 		{
 		    cout <<aux->codPasillo<<"~"<<aux->codProducto<<"~"<<aux->nombre<< "-> ";
 		    aux = aux->siguiente;
+		}
+		cout << endl;
+   }
+}
+void lista::MostrarMar()
+{
+   nodoMarca *R;
+   if (primeroMar== NULL)
+       cout << "No hay elementos";
+   else
+   {
+
+
+   		R = primeroMar;
+		while(R)
+		{
+		    cout<<R->codPasillo<<"~"<<R->codProducto<<"~"<<R->codMarca<<"~"<<R->nombre<<"~"<<R->cantGondola<<"~"<<R->precio<< "-> ";
+		    R = R->siguiente;
 		}
 		cout << endl;
    }
@@ -455,12 +725,104 @@ void AVLProducto::EnlaceAvl(nodoPasillo *nodoPas,nodoProducto *nodoPro){
     }
 }
 
-AVLProducto AVLProducto::arbolProductos(){
+arbolPas AVLProducto::arbolProductos(){
 //    AVLProducto arbolProd;
 	lista listaCod;
 	listaCod=listaCod.enlistarCodigos();
 	arbolPas arbolPasillo;
 	arbolPasillo=arbolPasillo.ListaBase();
+	pnodoProd aux=listaCod.primero;
+	for(int i=0; i<listaCod.largoLista();i++)
+    {
+        EnlaceAvl(arbolPasillo.raiz, aux);
+        aux=aux->siguiente;
+    }
+    arbolPasillo.InordenDoble(arbolPasillo.raiz);
+    return arbolPasillo;
+}
+
+lista lista::enlistarCodigosMar(){
+    lista listaAlm;
+    ifstream archivo;
+    string texto;
+    archivo.open("MarcasProductos.txt",ios::in);
+    while(!archivo.eof())
+    {
+        getline(archivo, texto);
+        char cstr[texto.size() + 1];
+        strcpy(cstr, texto.c_str());
+        char var[]=";";
+        char *token = strtok(cstr,var);
+        string codPas=token;
+        token = strtok(NULL,var);
+        string codPro=token;
+        token = strtok(NULL,var);
+        string codMar=token;
+        token = strtok(NULL,var);
+        string nom=token;
+        token = strtok(NULL,var);
+        string cantGondIni=token;
+        stringstream cantconv(cantGondIni);
+        int cantGond;
+        cantconv>>cantGond;
+        token = strtok(NULL,var);
+        string precioIni=token;
+        stringstream preconv(precioIni);
+        int precio;
+        preconv>>precio;
+        bool rep=false;
+        if(!listaAlm.ListaVacia())
+        {
+           //cout<<"siay nada"<<endl;
+            pnodoMarca aux=listaAlm.primeroMar;
+            for(int i=0; i<listaAlm.largoListaMar(); i++)
+            {
+                //cout<<"vuelto loko prro"<<codPro<<" "<<aux->codProducto<<endl;
+                if(aux->codMarca==codMar){
+                    rep=true;
+                    //cout<<"cmamo"<<endl;
+                }
+                aux=aux->siguiente;
+            }
+            if(rep==false)
+                listaAlm.InsertarFinalMar(codPas,codPro,codMar,nom,cantGond,precio);
+        }
+        else{
+          //cout<<"nuai nada"<<endl;
+          listaAlm.InsertarFinalMar(codPas,codPro,codMar,nom,cantGond,precio);
+        }
+    }
+    listaAlm.MostrarMar();
+    return listaAlm;
+}
+
+void RN::EnlaceRN(nodoProducto *nodoPro, nodoMarca *nodoMar){
+    if(nodoPro==NULL){
+        return;
+    }else{
+        EnlaceRN(nodoPro->hIzq, nodoMar);
+        if(nodoPro->codProducto==nodoMar->codProducto)
+        {
+        	if(nodoPro->subsiguiente==NULL){
+        		nodoPro->subsiguiente=nodoMar;
+        	}
+        	else{
+                RN ArbolEnla;
+                ArbolEnla.raiz=nodoPro->subsiguiente;
+                ArbolEnla.insert(nodoMar->codPasillo,nodoMar->nombre,nodoMar->codProducto,nodoMar->codMarca,nodoMar->cantGondola,nodoMar->precio);
+                nodoPro->subsiguiente=ArbolEnla.raiz;
+        	}
+		}
+        EnlaceRN(nodoPro->hDer, nodoMar);
+    }
+}
+
+RN RN::arbolMarcas(){
+//    AVLProducto arbolProd;
+	lista listaCod;
+	listaCod=listaCod.enlistarCodigos();
+	arbolPas arbolPasillo;
+	arbolProducto=arbolProducto.arbolProductos();
 	pnodoProd aux=listaCod.primero;
 	for(int i=0; i<listaCod.largoLista();i++)
     {
@@ -477,8 +839,8 @@ int main()
 //    pasillos.ListaBase();
 //    lis.enlistarCodigos();
     AVLProducto arbol;
+    lista Lista;
     arbol.arbolProductos();
-    cout<<endl;
     cout<<"fin del main";
     cin.get();
     return 0;
