@@ -80,6 +80,8 @@ private:
     nodoProducto *siguiente;
     nodoMarca *subsiguiente;
 
+
+   friend class arbolPas;
    friend class RN;
    friend class lista;
    friend class AVLProducto;
@@ -111,6 +113,7 @@ listaSimple y nodoCarrito
     nodoProducto *subsiguiente;
    friend class arbolPas;
    friend class AVLProducto;
+   friend class RN;
 };
 typedef nodoPasillo *pnodoPas;
 class arbolPas {
@@ -124,11 +127,13 @@ los pasillos. Base de la estructura creada con archivos
     arbolPas():raiz(NULL){}
    // void PreordenI();
     void InordenI(pnodoPas raiz);
-    void InordenDoble(pnodoPas R);
+    void InordenTriple(pnodoPas R);
    // void PostordenI();
     bool arbolVacio() { return raiz == NULL; }
     arbolPas ListaBase();
     void InsertaBinario(pnodoPas raiz, string cod, string nombre);
+    pnodoPas busquedaPro(nodoPasillo *nodoPas,string codPasillo);
+    arbolPas arbolProductos();
 };
 class AVLProducto{
 public:
@@ -143,7 +148,6 @@ public:
     void RotacionSimpleDerecha(nodoProducto *n1, nodoProducto *n2);
     void EnlaceAvl(nodoPasillo *nodoPas,nodoProducto *nodoPro);
     void InordenPro(pnodoProd R);
-    arbolPas arbolProductos();
 
     friend class lista;
 };
@@ -168,6 +172,9 @@ class lista {
     pnodoMarca primeroMar;
     pnodoProd actual;
     pnodoMarca actualMar;
+
+    friend class arbolPas;
+    friend class RN;
     friend class AVLProducto;
 };
 
@@ -179,23 +186,13 @@ public:
 	void rotarDerecha(nodoMarca *&, nodoMarca *&);
 	void balancearArbol(nodoMarca *&, nodoMarca *&);
 	void insert(const string &codPasilo,const string &nombre,const string &codProducto,const string &codMar,const int &gon, const float &val);
-	void inorder();
 	void levelOrder();
 	pnodoMarca insertarNodo(pnodoMarca raiz, pnodoMarca pt);
-	void InordenR(pnodoMarca ra);
+	void InordenMar(pnodoMarca R);
 	void EnlaceRN(nodoProducto *nodoPro, nodoMarca *nodoMar);
 	RN arbolMarcas();
 
 };
-void RN::InordenR(pnodoMarca R){
-    if(R==NULL){
-        return;
-    }else{
-        InordenR(R->hIzq);
-        cout<<R->codPasillo<<"~"<<R->codProducto<<"~"<<R->codMarca<<"~"<<R->nombre<<"~"<<R->cantGondola<<"~"<<R->precio<<"||";
-        InordenR(R->hDer);
-    }
-}
 
 pnodoMarca RN::insertarNodo(pnodoMarca raiz, pnodoMarca pt){
 	if (raiz == NULL)
@@ -641,25 +638,37 @@ void AVLProducto::RotacionSimpleIzquierda(nodoProducto* n, nodoProducto* n1){
     }
     n=n1;
 }
+void RN:: InordenMar(pnodoMarca R){
+ if(R==NULL){
+        return;
+    }else{
+        InordenMar(R->hIzq);
+        cout<<"||||"<<R->codPasillo<<"~"<<R->codProducto<<R->codMarca<<R->nombre<<R->cantGondola<<R->precio<<"/";
+        InordenMar(R->hDer);
+    }
+}
 void AVLProducto::InordenPro(pnodoProd R){
     if(R==NULL){
         return;
     }else{
         InordenPro(R->hIzq);
         cout<<R->codPasillo<<"~"<<R->codProducto<<R->nombre<<"/";
+        RN mar;
+        mar.raiz=R->subsiguiente;
+        mar.InordenMar(R->subsiguiente);
         InordenPro(R->hDer);
     }
 }
-void arbolPas::InordenDoble(pnodoPas R){
+void arbolPas::InordenTriple(pnodoPas R){
     if(R==NULL){
         return;
     }else{
-        InordenDoble(R->hIzq);
+        InordenTriple(R->hIzq);
         cout<<"||"<<R->codPasillo<<"~"<<R->nombre<<"|||";
         AVLProducto pro;
         pro.raiz=R->subsiguiente;
         pro.InordenPro(R->subsiguiente);
-        InordenDoble(R->hDer);
+        InordenTriple(R->hDer);
     }
 }
 lista lista::enlistarCodigos(){
@@ -725,8 +734,8 @@ void AVLProducto::EnlaceAvl(nodoPasillo *nodoPas,nodoProducto *nodoPro){
     }
 }
 
-arbolPas AVLProducto::arbolProductos(){
-//    AVLProducto arbolProd;
+arbolPas arbolPas::arbolProductos(){
+    AVLProducto arbolProd;
 	lista listaCod;
 	listaCod=listaCod.enlistarCodigos();
 	arbolPas arbolPasillo;
@@ -734,10 +743,9 @@ arbolPas AVLProducto::arbolProductos(){
 	pnodoProd aux=listaCod.primero;
 	for(int i=0; i<listaCod.largoLista();i++)
     {
-        EnlaceAvl(arbolPasillo.raiz, aux);
+        arbolProd.EnlaceAvl(arbolPasillo.raiz, aux);
         aux=aux->siguiente;
     }
-    arbolPasillo.InordenDoble(arbolPasillo.raiz);
     return arbolPasillo;
 }
 
@@ -792,7 +800,7 @@ lista lista::enlistarCodigosMar(){
           listaAlm.InsertarFinalMar(codPas,codPro,codMar,nom,cantGond,precio);
         }
     }
-    listaAlm.MostrarMar();
+    //listaAlm.MostrarMar();
     return listaAlm;
 }
 
@@ -816,20 +824,35 @@ void RN::EnlaceRN(nodoProducto *nodoPro, nodoMarca *nodoMar){
         EnlaceRN(nodoPro->hDer, nodoMar);
     }
 }
+pnodoPas arbolPas::busquedaPro(nodoPasillo *nodoPas,string codPasillo){
+    if(nodoPas==NULL){
+        return NULL;
+    }else{
+        cout<<"nusc"<<nodoPas->nombre;
+        busquedaPro(nodoPas->hIzq, codPasillo);
+        if(nodoPas->codPasillo==codPasillo)
+            return nodoPas;
+        busquedaPro(nodoPas->hDer, codPasillo);
+    }
+}
+
 
 RN RN::arbolMarcas(){
 //    AVLProducto arbolProd;
 	lista listaCod;
-	listaCod=listaCod.enlistarCodigos();
+	listaCod=listaCod.enlistarCodigosMar();
 	arbolPas arbolPasillo;
-	arbolProducto=arbolProducto.arbolProductos();
-	pnodoProd aux=listaCod.primero;
-	for(int i=0; i<listaCod.largoLista();i++)
+	arbolPasillo=arbolPasillo.arbolProductos();
+	pnodoMarca aux=listaCod.primeroMar;
+	pnodoPas encont;
+	for(int i=0; i<listaCod.largoListaMar();i++)
     {
-        EnlaceAvl(arbolPasillo.raiz, aux);
+        encont=arbolPasillo.busquedaPro(arbolPasillo.raiz, aux->codPasillo);
+        cout<<"nom"<<encont->nombre;
+        EnlaceRN(encont->subsiguiente,aux);
         aux=aux->siguiente;
     }
-    arbolPasillo.InordenDoble(arbolPasillo.raiz);
+    arbolPasillo.InordenTriple(arbolPasillo.raiz);
 }
 
 int main()
@@ -838,9 +861,9 @@ int main()
 //    arbolPas pasillos;
 //    pasillos.ListaBase();
 //    lis.enlistarCodigos();
-    AVLProducto arbol;
-    lista Lista;
-    arbol.arbolProductos();
+    RN arbol;
+    arbol.arbolMarcas();
+    cout<<endl;
     cout<<"fin del main";
     cin.get();
     return 0;
