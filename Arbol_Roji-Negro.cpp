@@ -227,12 +227,12 @@ int main()
 {
 	RN RojiNegro;
 
-	RojiNegro.insert("20","luisiana","45","75",4,3.5);
-	RojiNegro.insert("21","del monte","46","21",5,3.6);
-	RojiNegro.insert("22","luisiana","47","1",6,3.7);
+	RojiNegro.insert("20","luisiana","45","51",4,3.5);
+	RojiNegro.insert("21","del monte","46","36",5,3.6);
+	RojiNegro.insert("22","luisiana","47","67",6,3.7);
 //	cout<<RojiNegro.raiz->valor<<endl;
-	RojiNegro.insert("23","luisiana","48","34",7,3.8);
-	RojiNegro.insert("24","luisiana","49","18",8,3.9);
+//	RojiNegro.insert("23","luisiana","48","34",7,3.8);
+//	RojiNegro.insert("24","luisiana","49","18",8,3.9);
 //	RojiNegro.insert(57);
 //	RojiNegro.insert(8);
 //	RojiNegro.insert(95);
