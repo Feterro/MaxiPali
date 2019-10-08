@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1570484373 source:f:\c++\progra2 estructuras\maxipali\progra2(pasillos y productos)version_nueva.cpp
+	<iostream>
+	<fstream>
+	<cstring>
+	<string>
+	<sstream>
+	<bits/stdc++.h>
+
