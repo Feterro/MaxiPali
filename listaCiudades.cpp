@@ -5,16 +5,16 @@
 #include <cstring>
 #include <string>
 using namespace std;
-class nodo {
+class nodoCiudad {
    public:
-    nodo(int cod, string nom)
+    nodoCiudad(int cod, string nom)
     {
        codigo= cod;
        siguiente = NULL;
        nombre=nom;
     }
 
-nodo(int cod, string nom, nodo * signodo)
+    nodoCiudad(int cod, string nom, nodoCiudad * signodo)
     {
        codigo =cod;
        nombre=nom;
@@ -24,11 +24,11 @@ nodo(int cod, string nom, nodo * signodo)
    private:
     int codigo;
     string nombre;
-    nodo *siguiente;
+    nodoCiudad *siguiente;
    friend class Ciudad;
 };
 
-typedef nodo *pnodo;
+typedef nodoCiudad *pnodoCiudad;
 
 class Ciudad {
    public:
@@ -42,12 +42,12 @@ class Ciudad {
     bool agregarCiudad(Ciudad lista, int cod);
 
    private:
-    pnodo primero;
-    pnodo actual;
+    pnodoCiudad primero;
+    pnodoCiudad actual;
 };
 void Ciudad::Mostrar()
 {
-    nodo *aux;
+    nodoCiudad *aux;
     if (primero== NULL)
         cout << "No hay elementos";
     else
@@ -55,7 +55,7 @@ void Ciudad::Mostrar()
         aux = primero;
 		while(aux)
 		{
-		    cout << aux->codigo<<" || "<<aux->nombre<< "-> ";
+		    cout << aux->codigo<<"~"<<aux->nombre<< "->";
 		    aux = aux->siguiente;
 		}
 		cout << endl;
@@ -64,7 +64,7 @@ void Ciudad::Mostrar()
 
 int Ciudad::largoCiudad(){
     int cont=0;
-    pnodo aux;
+    pnodoCiudad aux;
     aux = primero;
     if(listaVacia()){
         return cont;
@@ -80,12 +80,12 @@ int Ciudad::largoCiudad(){
 void Ciudad::InsertarFinal(int cod, string nom)
 {
     if (listaVacia())
-        primero = new nodo(cod, nom);
+        primero = new nodoCiudad(cod, nom);
     else
-        { pnodo aux = primero;
+        { pnodoCiudad aux = primero;
             while ( aux->siguiente != NULL)
                 aux= aux->siguiente;
-                aux->siguiente=new nodo(cod, nom);
+                aux->siguiente=new nodoCiudad(cod, nom);
         }
 }
 Ciudad Ciudad::agregarCiudades(){
@@ -112,10 +112,10 @@ Ciudad Ciudad::agregarCiudades(){
             stringstream stringInt(cod);
             int codI;
             stringInt>>codI;
-            cout<<"Codigo: "<<codI<<endl;
+            //cout<<"Codigo: "<<codI<<endl;
             aux=strtok(NULL, ";");
             string nom=aux;
-            cout<<"Nombre: "<<nom<<endl;
+            //cout<<"Nombre: "<<nom<<endl;
             if (listaCiudades.listaVacia()){
                 listaCiudades.InsertarFinal(codI, nom);
             }
@@ -129,7 +129,7 @@ Ciudad Ciudad::agregarCiudades(){
     return listaCiudades;
 }
 bool Ciudad::agregarCiudad(Ciudad lista, int cod){
-    pnodo aux=lista.primero;
+    pnodoCiudad aux=lista.primero;
     while (aux!=NULL){
         if(aux->codigo==cod)
             return false;
