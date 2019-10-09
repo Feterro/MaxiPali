@@ -3,5 +3,4 @@
 01;34;Frijoles
 15;28;Jugos
 4;73;Jamones
-01;34;Sal
-5;55;pn
+01;20;Sal
