@@ -9,7 +9,6 @@ enum Color {
     ROJO,
     NEGRO
 };
-
 class nodoMarca {
 /*
 Clase que construye los objetos de tipo nodo donde se
@@ -118,6 +117,44 @@ listaSimple y nodoCarrito
    friend class RN;
 };
 typedef nodoPasillo *pnodoPas;
+class nodoCiudad{
+   public:
+    nodoCiudad(int cod, string nom)
+    {
+       codigo= cod;
+       siguiente = NULL;
+       nombre=nom;
+    }
+
+nodoCiudad(int cod, string nom, nodoCiudad * signodo)
+    {
+       codigo =cod;
+       nombre=nom;
+       siguiente = signodo;
+    }
+
+   private:
+    int codigo;
+    string nombre;
+    nodoCiudad *siguiente;
+   friend class Ciudad;
+};
+typedef nodoCiudad *pnodoCiudad;
+class Ciudad {
+   public:
+    Ciudad() { primero = actual = NULL; }
+
+    void InsertarFinal(int cod, string nom);
+    bool listaVacia() { return primero == NULL; }
+    void Mostrar();
+    int largoCiudad();
+    Ciudad agregarCiudades();
+    bool agregarCiudad(Ciudad lista, int cod);
+
+   private:
+    pnodoCiudad primero;
+    pnodoCiudad actual;
+};
 class arbolPas {
 /*
 Clase creadora de listas donde se insertaran
@@ -180,7 +217,6 @@ class lista {
     friend class RN;
     friend class AVLProducto;
 };
-
 class RN{
 public:
     nodoMarca *raiz;
@@ -195,6 +231,7 @@ public:
 	RN arbolMarcas();
 
 };
+<<<<<<< Updated upstream
 class nodoCiudad {
    public:
     nodoCiudad(int cod, string nom)
@@ -235,6 +272,8 @@ class Ciudad {
     pnodoCiudad primero;
     pnodoCiudad actual;
 };
+=======
+>>>>>>> Stashed changes
 void Ciudad::Mostrar()
 {
     nodoCiudad *aux;
@@ -245,12 +284,17 @@ void Ciudad::Mostrar()
         aux = primero;
 		while(aux)
 		{
+<<<<<<< Updated upstream
 		    cout << aux->codigo<<"~"<<aux->nombre<< "->";
+=======
+		    cout << aux->codigo<<" || "<<aux->nombre<< "-> ";
+>>>>>>> Stashed changes
 		    aux = aux->siguiente;
 		}
 		cout << endl;
    }
 }
+<<<<<<< Updated upstream
 
 int Ciudad::largoCiudad(){
     int cont=0;
@@ -266,6 +310,22 @@ int Ciudad::largoCiudad(){
     return cont;
     }
 
+=======
+int Ciudad::largoCiudad(){
+    int cont=0;
+    pnodoCiudad aux;
+    aux = primero;
+    if(listaVacia()){
+        return cont;
+    }else{
+        while(aux!=NULL){
+        aux=aux->siguiente;
+        cont++;
+    }
+    return cont;
+    }
+
+>>>>>>> Stashed changes
 }
 void Ciudad::InsertarFinal(int cod, string nom)
 {
@@ -278,6 +338,7 @@ void Ciudad::InsertarFinal(int cod, string nom)
                 aux->siguiente=new nodoCiudad(cod, nom);
         }
 }
+<<<<<<< Updated upstream
 Ciudad Ciudad::agregarCiudades(){
     Ciudad listaCiudades;
     ifstream archivo;
@@ -327,6 +388,8 @@ bool Ciudad::agregarCiudad(Ciudad lista, int cod){
     }
     return true;
 }
+=======
+>>>>>>> Stashed changes
 pnodoMarca RN::insertarNodo(pnodoMarca raiz, pnodoMarca pt){
 	if (raiz == NULL)
         return pt;
@@ -374,7 +437,6 @@ void RN::rotarIzquierda(nodoMarca *&raiz, nodoMarca *&pt)
 	pt_hDer->hIzq = pt;
 	pt->padre = pt_hDer;
 }
-
 void RN::rotarDerecha(nodoMarca *&raiz, nodoMarca *&pt)
 {
 	pnodoMarca pt_hIzq = pt->hIzq;
@@ -398,7 +460,6 @@ void RN::rotarDerecha(nodoMarca *&raiz, nodoMarca *&pt)
 	pt_hIzq->hDer = pt;
 	pt->padre = pt_hIzq;
 }
-
 void RN::balancearArbol(nodoMarca *&raiz, nodoMarca *&pt)
 {
 	pnodoMarca padre_pt = NULL;
@@ -466,7 +527,6 @@ void RN::insert(const string &codPasilo,const string &nombre,const string &codPr
 	raiz = insertarNodo(raiz, pt);
 	balancearArbol(raiz, pt);
 }
-
 int lista::largoLista(){
     int cont=0;
 
@@ -757,7 +817,6 @@ void AVLProducto::RotacionSimpleDerecha(nodoProducto* n, nodoProducto* n1){
     }
     n=n1;
 }
-
 void AVLProducto::RotacionSimpleIzquierda(nodoProducto* n, nodoProducto* n1){
     n->hIzq=n1->hDer;
     n1->hDer=n;
@@ -866,7 +925,6 @@ void AVLProducto::EnlaceAvl(nodoPasillo *nodoPas,nodoProducto *nodoPro){
         EnlaceAvl(nodoPas->hDer, nodoPro);
     }
 }
-
 arbolPas arbolPas::arbolProductos(){
     AVLProducto arbolProd;
 	lista listaCod;
@@ -881,7 +939,6 @@ arbolPas arbolPas::arbolProductos(){
     }
     return arbolPasillo;
 }
-
 lista lista::enlistarCodigosMar(){
     lista listaAlm;
     ifstream archivo;
@@ -936,7 +993,6 @@ lista lista::enlistarCodigosMar(){
     //listaAlm.MostrarMar();
     return listaAlm;
 }
-
 void AVLProducto::EnlaceRN(nodoProducto *nodoPro, nodoMarca *nodoMar){
     if(nodoPro==NULL){
         return;
@@ -982,8 +1038,6 @@ nodoProducto* arbolPas::busquedaPro(nodoPasillo *nodoPas,nodoMarca* nodoMar){
         busquedaPro(nodoPas->hDer, nodoMar);
     }
 }
-
-
 RN RN::arbolMarcas(){
 //    AVLProducto arbolProd;
 	lista listaCod;
@@ -1002,7 +1056,53 @@ RN RN::arbolMarcas(){
     }
     arbolPasillo.InordenTriple(arbolPasillo.raiz);
 }
-
+Ciudad Ciudad::agregarCiudades(){
+    Ciudad listaCiudades;
+    ifstream archivo;
+    string ciudad;
+    archivo.open("Ciudades.txt", ios::in);
+    if (archivo.fail()){
+        cout<<"Error al leer el archivo"<<endl;
+    }
+    else{
+        while(!archivo.eof())
+        {
+            getline(archivo, ciudad);
+            char cstr[ciudad.size()+1];
+            strcpy(cstr, ciudad.c_str());
+            char *frase=cstr;
+            char *aux;
+            aux=strtok(frase,";");
+            string cod;
+            stringstream codStr;
+            codStr<<aux;
+            codStr>>cod;
+            stringstream stringInt(cod);
+            int codI;
+            stringInt>>codI;
+            aux=strtok(NULL, ";");
+            string nom=aux;
+            if (listaCiudades.listaVacia()){
+                listaCiudades.InsertarFinal(codI, nom);
+            }
+            bool agregar=agregarCiudad(listaCiudades, codI);
+            if(agregar){
+                listaCiudades.InsertarFinal(codI, nom);
+            }
+        }
+    }
+    listaCiudades.Mostrar();
+    return listaCiudades;
+}
+bool Ciudad::agregarCiudad(Ciudad lista, int cod){
+    pnodoCiudad aux=lista.primero;
+    while (aux!=NULL){
+        if(aux->codigo==cod)
+            return false;
+        aux=aux->siguiente;
+    }
+    return true;
+}
 int main()
 {
 //    lista lis;
@@ -1010,10 +1110,17 @@ int main()
 //    pasillos.ListaBase();
 //    lis.enlistarCodigos();
     RN arbol;
+<<<<<<< Updated upstream
     Ciudad ciudades;
     arbol.arbolMarcas();
     cout<<endl;
     ciudades.agregarCiudades();
+=======
+    Ciudad ciudad;
+    arbol.arbolMarcas();
+    cout<<endl;
+    ciudad.agregarCiudades();
+>>>>>>> Stashed changes
     cout<<endl;
     cout<<"fin del main";
     cin.get();

@@ -10,12 +10,11 @@ class nodo {
         hDer = NULL;
         nivel=1;
     }
-    int valor;
+   private:
     nodo *hIzq;
     int nivel;
     nodo *hDer;
-   private:
-    int cant;
+    int valor;
 
    friend class AA;
 };
@@ -56,13 +55,10 @@ pnodo AA::insertar(int val, pnodo aux)
     }
     else {
         cout<<"Repetido"<<endl;
+        return aux;
     }
     aux=giro(aux);
-    cout<<"Valor: "<<val<<endl;
-    cout<<"Vuelve del giro: "<<aux->valor<<endl;
     aux=reparto(aux);
-    cout<<"Vuelve del reparto: "<<aux->valor<<endl;
-    cout<<"***********************";
     return aux;
 }
 pnodo AA::giro( pnodo aux )
@@ -82,13 +78,6 @@ pnodo AA::reparto(pnodo aux)
     }
     if( aux->hDer->nivel == aux->nivel && aux->hDer->hDer!=NULL && aux->hDer->hDer->nivel==aux->nivel)
     {
-//        cout<<aux->hDer->valor<<endl;
-//        cout<<aux->valor<<endl;
-//        cout<<aux->hIzq<<endl;
-//        cout<<"Nivel: "<<aux->hDer->nivel<<endl;
-//        cout<<aux->nivel<<endl;
-        cout<<"Rotar derecha"<<endl;
-        cout<<aux->valor<<endl;
         aux= rotarDerecha(aux);
         aux->nivel++;
     }
@@ -96,7 +85,7 @@ pnodo AA::reparto(pnodo aux)
 }
 pnodo AA::rotarIzquierda(pnodo aux)
 {
-    pnodo otro=aux->hIzq; //otro: k1 y aux=k2
+    pnodo otro=aux->hIzq;
     aux->hIzq = otro->hDer;
     otro->hDer= aux;
     return otro;
@@ -112,7 +101,7 @@ pnodo AA::rotarDerecha(pnodo aux)
     otro->hIzq=aux;
     return otro;
 }
-int main() {
+int main(){
     AA aa;
     aa.raiz=aa.insertar(10, aa.raiz);
     aa.raiz=aa.insertar(4, aa.raiz);
@@ -121,13 +110,6 @@ int main() {
     aa.raiz=aa.insertar(7, aa.raiz);
     aa.raiz=aa.insertar(1, aa.raiz);
     aa.raiz=aa.insertar(3, aa.raiz);
-    cout<<"||||||||||||||||||||||||||||||||"<<endl;
-    cout<<"Raiz: "<<aa.raiz->valor<<" "<<aa.raiz->nivel<<endl;
-    cout<<"hizq "<<aa.raiz->hIzq->valor<<" "<<aa.raiz->hIzq->nivel<<endl;
-    cout<<"hizq hizq "<<aa.raiz->hIzq->hIzq->valor<<" "<<aa.raiz->hIzq->hIzq->nivel<<endl;
-    cout<<"hizq der "<<aa.raiz->hIzq->hDer->valor<<" "<<aa.raiz->hIzq->hDer->nivel<<endl;
-    cout<<"hder "<<aa.raiz->hDer->valor<<" "<<aa.raiz->hDer->nivel<<endl;
-    cout<<"hder hizq "<<aa.raiz->hDer->hIzq->valor<<" "<<aa.raiz->hDer->hIzq->nivel<<endl;
-    cout<<"hder hder "<<aa.raiz->hDer->hDer->valor<<" "<<aa.raiz->hDer->hDer->nivel<<endl;
+    aa.Inorden(aa.raiz);
     return 0;
 }
