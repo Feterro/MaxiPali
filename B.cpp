@@ -329,7 +329,6 @@ void ArbolB::inOrden(Pagina *r)
 
 void ArbolB::cargarClientes(string pNombreArchivo){
     //ArbolB cliente;
-    cout<<"Empieza"<<endl;
     int n;
     bool repetido;
     int cedula;
@@ -354,8 +353,8 @@ void ArbolB::cargarClientes(string pNombreArchivo){
 
         }
     }
-    cout<<"termina";
-    //escribir();
+
+    escribir();
     archivo.close();
     //return cliente;
 }
@@ -383,8 +382,9 @@ void ArbolB::cargarAdmins(string pNombreArchivo){
 
 int main()
 {
-    ArbolB b;
-    b.cargarClientes("Clientes.txt");
+    ArbolB arbol=ArbolB(5);
+    arbol.cargarClientes("Clientes.txt");
+    cout<<"Fin del main"<<endl;
     cin.get();
     return 0;
 }

@@ -1,14 +1,11 @@
 #include <QCoreApplication>
-#include "nuevohilo.h"
-#include "nuevoservidor.h"
-
+#include "servidor.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    NuevoServidor servidor;
-
-    servidor.startServer();
+    Servidor servidor;
+    servidor.inicioServidor();
 
     return a.exec();
 }
