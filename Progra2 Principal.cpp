@@ -11,286 +11,9 @@
 #include "headers/arbolPas.h"
 #include "headers/arbolInventario.h"
 #include "headers/arbolb.h"
+#include "Principal.h"
 
 using namespace std;
-
-//class nodoMarca {
-///*
-//Clase que construye los objetos de tipo nodo donde se
-//gurdan los datos de las marcas de los productos.
-//Clase amiga de lista marcas y la clase principal.
-//*/
-//
-//   public:
-//    nodoMarca(string codPas, string nom, string codPro, string codMar, int cantGon, float val)
-//    {
-//        codPasillo=codPas;
-//        nombre=nom;
-//        codProducto=codPro;
-//        codMarca=codMar;
-//        cantGondola=cantGon;
-//        precio=val;
-//        cantcomp=0;
-//        hIzq = NULL;
-//        hDer = NULL;
-//        padre=NULL;
-//        siguiente=NULL;
-//        color=ROJO;
-//    }
-//   private:
-//    string codPasillo;
-//    string nombre;
-//    string codProducto;
-//    string codMarca;
-//    int cantGondola;
-//    float precio;
-//    int cantcomp;
-//    nodoMarca *hIzq;
-//    nodoMarca *hDer;
-//    nodoMarca *padre;
-//    nodoMarca *siguiente;
-//    Color color;
-//
-//   friend class AVLProducto;
-//   friend class arbolPas;
-//   friend class RN;
-//   friend class lista;
-//};
-//typedef nodoMarca*pnodoMarca;
-//class nodoProducto {
-///*
-//Clase creadora de nodos de productos para ser
-//enlazado a los nodos de pasillo . Clase amiga
-// de listaDCpas,listaSimple.
-//*/
-//public:
-//    nodoProducto(string codPas,string codPro, string nom)
-//    {
-//        codPasillo=codPas;
-//        nombre=nom;
-//        codProducto=codPro;
-//        hIzq=NULL;
-//        hDer=NULL;
-//        siguiente=NULL;
-//        subsiguiente=NULL;
-//    }
-//
-//
-//private:
-//    string nombre;
-//    nodoProducto *hIzq;
-//    nodoProducto *hDer;
-//    int FB;
-//    string codPasillo;
-//    string codProducto;
-//    nodoProducto *siguiente;
-//    nodoMarca *subsiguiente;
-//
-//
-//   friend class arbolPas;
-//   friend class RN;
-//   friend class lista;
-//   friend class AVLProducto;
-//};
-//typedef nodoProducto *pnodoProd;
-//class nodoPasillo {
-///*
-//Clase creadora de nodos de pasillo para ser
-//usados en listas. Clase amiga de listaDCpas,
-//listaSimple y nodoCarrito
-//*/
-//   public:
-//    nodoPasillo(string codPas, string nom)
-//    {
-//        codPasillo=codPas;
-//        nombre=nom;
-//        pasvis=0;
-//        hIzq=NULL;
-//        hDer=NULL;
-//        subsiguiente=NULL;
-//    }
-//
-//   private:
-//    string codPasillo;
-//    string nombre;
-//    int pasvis;
-//    nodoPasillo *hIzq;
-//    nodoPasillo *hDer;
-//    nodoProducto *subsiguiente;
-//   friend class arbolPas;
-//   friend class AVLProducto;
-//   friend class RN;
-//};
-//typedef nodoPasillo *pnodoPas;
-//class nodoCiudad{
-//   public:
-//    nodoCiudad(int cod, string nom)
-//    {
-//       codigo= cod;
-//       siguiente = NULL;
-//       nombre=nom;
-//    }
-//
-//nodoCiudad(int cod, string nom, nodoCiudad * signodo)
-//    {
-//       codigo =cod;
-//       nombre=nom;
-//       siguiente = signodo;
-//    }
-//
-//   private:
-//    int codigo;
-//    string nombre;
-//    nodoCiudad *siguiente;
-//   friend class Ciudad;
-//};
-//typedef nodoCiudad *pnodoCiudad;
-//class nodoInventario {
-///*
-//Clase creadora de nodos de inventario para ser
-//usados en listas. Clase amiga de listaDCpas,
-//listaSimple y listaDCInv
-//*/
-//
-//   public:
-//    nodoInventario(string codPas, string nom, string codPro, string codMar, int cantStk, bool canasta)
-//    {
-//        codPasillo=codPas;
-//        nombre=nom;
-//        codProducto=codPro;
-//        codMarca=codMar;
-//        cantStock=cantStk;
-//        codCanasta=canasta;
-//        string codi=codPas+codPro+codMar;
-//        stringstream codTrans(codi);
-//        int codigo;
-//        codTrans>>codigo;
-//        codArbol=codigo;
-//        hIzq = NULL;
-//        hDer = NULL;
-//        nivel=1;
-//    }
-//   private:
-//    string codPasillo;
-//    string nombre;
-//    string codProducto;
-//    string codMarca;
-//    int cantStock;
-//    bool codCanasta;
-//    int codArbol;
-//    nodoInventario *hIzq;
-//    nodoInventario *hDer;
-//    int nivel;
-//
-//   friend class ArbolInventario;
-//};
-//typedef nodoInventario* pnodoInventario;
-//class Ciudad {
-//   public:
-//    Ciudad() { primero = actual = NULL; }
-//
-//    void InsertarFinal(int cod, string nom);
-//    bool listaVacia() { return primero == NULL; }
-//    void Mostrar();
-//    int largoCiudad();
-//    Ciudad agregarCiudades();
-//    bool agregarCiudad(Ciudad lista, int cod);
-//
-//   private:
-//    pnodoCiudad primero;
-//    pnodoCiudad actual;
-//};
-//class arbolPas {
-///*
-//Clase creadora de listas donde se insertaran
-//los pasillos. Base de la estructura creada con archivos
-//*/
-//
-//   public:
-//    pnodoPas raiz;
-//    arbolPas():raiz(NULL){}
-//   // void PreordenI();
-//    void InordenI(pnodoPas raiz);
-//    void InordenTriple(pnodoPas R);
-//   // void PostordenI();
-//    bool arbolVacio() { return raiz == NULL; }
-//    arbolPas ListaBase();
-//    void InsertaBinario(pnodoPas raiz, string cod, string nombre);
-//    nodoProducto* busquedaPro(nodoPasillo *nodoPas,nodoMarca* nodMar);
-//    arbolPas arbolProductos();
-//};
-//class AVLProducto{
-//public:
-//    pnodoProd raiz;
-//    AVLProducto():raiz(NULL){}
-//    bool Hh;
-//    void InordenR(pnodoProd raiz);
-//    void InsertarBalanceado(nodoProducto *r, nodoProducto *r2, bool Hh, string codPas, string codProd, string nomProd);
-//    void RotacionDobleIzquierda(nodoProducto *n1, nodoProducto *n2);
-//    void RotacionDobleDerecha(nodoProducto *n1, nodoProducto *n2);
-//    void RotacionSimpleIzquierda(nodoProducto *n1, nodoProducto *n2);
-//    void RotacionSimpleDerecha(nodoProducto *n1, nodoProducto *n2);
-//    void EnlaceAvl(nodoPasillo *nodoPas,nodoProducto *nodoPro);
-//    void InordenPro(pnodoProd R);
-//    void EnlaceRN(nodoProducto *nodoPro, nodoMarca *nodoMar);
-//
-//    friend class lista;
-//};
-//class lista {
-//   public:
-//    lista() { primero = actual = NULL; primeroMar = actualMar= NULL; }
-//
-//    void InsertarFinal(string codPas, string codPro, string nom);
-//    void InsertarFinalMar(string codPas, string nom, string codPro, string codMar,int cantGon,float precio);
-//    bool ListaVacia() { return primero == NULL; }
-//    bool ListaVaciaMar() { return primeroMar == NULL; }
-//    int largoLista();
-//    int largoListaMar();
-//    void Mostrar();
-//    void MostrarMar();
-//    lista enlistarCodigos();
-//    lista enlistarCodigosMar();
-//
-//
-//   private:
-//    pnodoProd primero;
-//    pnodoMarca primeroMar;
-//    pnodoProd actual;
-//    pnodoMarca actualMar;
-//
-//    friend class arbolPas;
-//    friend class RN;
-//    friend class AVLProducto;
-//};
-//class RN{
-//public:
-//    nodoMarca *raiz;
-//	RN() { raiz = NULL; }
-//	void rotarIzquierda(nodoMarca *&, nodoMarca *&);
-//	void rotarDerecha(nodoMarca *&, nodoMarca *&);
-//	void balancearArbol(nodoMarca *&, nodoMarca *&);
-//	void insert(const string &codPasilo,const string &nombre,const string &codProducto,const string &codMar,const int &gon, const float &val);
-//	void levelOrder();
-//	pnodoMarca insertarNodo(pnodoMarca raiz, pnodoMarca pt);
-//	void InordenMar(pnodoMarca R);
-//	RN arbolMarcas();
-//
-//};
-
-//class ArbolInventario{
-//public:
-//    nodoInventario *raiz;
-//	ArbolInventario() { raiz = NULL; }
-//    InordenR(pnodoInventario ra);
-//    pnodoInventario insertar(int codArb,string codPas, string nom, string codPro, string codMar, int cantStk, bool canasta, pnodoInventario aux);
-//    pnodoInventario giro(pnodoInventario aux);
-//    pnodoInventario reparto(pnodoInventario aux);
-//    pnodoInventario rotarDerecha(pnodoInventario aux);
-//    pnodoInventario rotarIzquierda(pnodoInventario aux);
-//    void Inorden(pnodoInventario ra);
-//    ArbolInventario agregarInventario();
-//};
-
 void Ciudad::Mostrar()
 {
     nodoCiudad *aux;
@@ -774,10 +497,6 @@ void AVLProducto::RotacionSimpleIzquierda(nodoProducto* n, nodoProducto* n1){
 }
 pnodoInventario ArbolInventario::insertar(int conca, string codPas, string nom, string codPro, string codMar, int cantStk, bool canasta, pnodoInventario aux)
 {
-//    string conc=codPas+codPro+codMar;
-//    stringstream conv(conc);
-//    int val=0;
-//    conv>>val;
     if (aux==NULL){
         aux=new nodoInventario(codPas, nom, codPro, codMar, cantStk, canasta);
     }
@@ -817,7 +536,6 @@ pnodoInventario ArbolInventario::reparto(pnodoInventario aux)
     }
     return aux;
 }
-
 pnodoInventario ArbolInventario::rotarIzquierda(pnodoInventario aux)
 {
     pnodoInventario otro=aux->hIzq;
@@ -1164,7 +882,6 @@ void ArbolB::insertar(tipoClave cl, string nombre, string telefono, string codig
 {
     raiz = insertar(raiz, cl, nombre, telefono, codigoCiudad, correo);
 }
-
 Pagina* ArbolB::insertar(Pagina *r, tipoClave cl, string nombre, string telefono, string codigoCiudad, string correo)
 {
     bool subeArriba;
@@ -1190,7 +907,6 @@ Pagina* ArbolB::insertar(Pagina *r, tipoClave cl, string nombre, string telefono
     }
     return r;
 }
-
 bool ArbolB::empujar(Pagina *actual, tipoClave cl, tipoClave &mediana, Pagina *&nuevo, string &nombre, string &telefono, string &codigoCiudad, string &correo)
 {
     int k;
@@ -1223,7 +939,6 @@ bool ArbolB::empujar(Pagina *actual, tipoClave cl, tipoClave &mediana, Pagina *&
     }
     return subeArriba;
 }
-
 /**
  * Revisa si la clave se encuentra en el arbol
  * @param actual La pagina actual
@@ -1255,7 +970,6 @@ bool ArbolB::buscarNodo(Pagina *actual, tipoClave cl, int &k)
     k = index;
     return encontrado;
 }
-
 /**
  * Baja por las ramas del arbol hasta encontrar la clave
  * @param cl La clave que se desea buscar
@@ -1291,7 +1005,6 @@ Pagina* ArbolB::buscar(Pagina *actual, tipoClave cl, int &n)
             return buscar(actual->obtenerRama(n), cl, n);
     }
 }
-
 void ArbolB::meterPagina(Pagina *actual, tipoClave cl, Pagina *ramaDr, int k, string nombre, string telefono, string codigoCiudad, string correo)
 {
     // Desplazar elementos a la derecha
@@ -1314,7 +1027,6 @@ void ArbolB::meterPagina(Pagina *actual, tipoClave cl, Pagina *ramaDr, int k, st
     // Incrementa el numero de claves
     actual->cambiarCuenta(actual->obtenerCuenta() + 1);
 }
-
 void ArbolB::dividirNodo(Pagina *actual, tipoClave &mediana, Pagina *&nuevo, int pos, string &nombre, string &telefono, string &codigoCiudad, string &correo)
 {
     int i, posMdna, k;
@@ -1350,12 +1062,10 @@ void ArbolB::dividirNodo(Pagina *actual, tipoClave &mediana, Pagina *&nuevo, int
     actual->cambiarCuenta(actual->obtenerCuenta() - 1);
     nuevo = nuevaPag;
 }
-
 void ArbolB::escribir()
 {
     escribir(raiz, 1);
 }
-
 void ArbolB::escribir(Pagina *r, int h)
 {
     int i;
@@ -1381,12 +1091,10 @@ void ArbolB::escribir(Pagina *r, int h)
         cout << endl;
     }
 }
-
 void ArbolB::listaCreciente()
 {
     inOrden(raiz);
 }
-
 void ArbolB::inOrden(Pagina *r)
 {
     if(r)
@@ -1399,7 +1107,6 @@ void ArbolB::inOrden(Pagina *r)
         }
     }
 }
-
 void ArbolB::cargarClientes(string pNombreArchivo){
     //ArbolB cliente;
     int n;
@@ -1429,7 +1136,6 @@ void ArbolB::cargarClientes(string pNombreArchivo){
     archivo.close();
     //return cliente;
 }
-
 void ArbolB::cargarAdmins(string pNombreArchivo){
     int n;
     bool repetido;
@@ -1450,17 +1156,30 @@ void ArbolB::cargarAdmins(string pNombreArchivo){
     }
     archivo.close();
 }
-
+bool Principal::validarCliente(Pagina *r, string ced)
+{
+    ArbolB arbol=ArbolB(5);
+    arbol.obtenerRaiz();
+    if(r)
+    {
+        arbol.inOrden(r->obtenerRama(0));
+        for (int k = 1; k <= r->obtenerCuenta(); k++)
+        {
+            if(r->obtenerDato(k, 0)==ced)
+                return true;
+            arbol.inOrden(r->obtenerRama(k));
+        }
+        return false;
+    }
+}
 int main()
 {
-//    lista lis;
-//    arbolPas pasillos;
-//    pasillos.ListaBase();
-//    lis.enlistarCodigos();
     RN arbol;
     Ciudad ciudad;
     ArbolInventario inven;
+    Principal principal;
     arbol.arbolMarcas();
+    Pagina *actual;
     ArbolB arbolCli=ArbolB(5);
     ArbolB arbolAdm=ArbolB(5);
     cout<<"\n"<<endl;
@@ -1473,6 +1192,15 @@ int main()
     cout<<endl;
     arbolAdm.cargarAdmins("Administradores.txt");
     arbolAdm.escribir();
+    cout<<"dsfsdfsd "<<arbolCli.obtenerRaiz()->obtenerClave(0);
+    cout<<endl;
+    bool cliente=principal.validarCliente(arbolCli.obtenerRaiz(), "1234567");
+    if (cliente==true){
+        cout<<"hola"<<endl;
+    }
+    else{
+        cout<<"adios"<<endl;
+    }
     cout<<endl;
     cout<<"fin del main";
     cin.get();
