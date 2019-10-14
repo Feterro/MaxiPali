@@ -8,7 +8,6 @@
 #include <bits/stdc++.h>
 #include "nodos.h"
 using namespace std;
-
 class arbolPas {
 /*
 Clase creadora de listas donde se insertaran
@@ -27,5 +26,12 @@ los pasillos. Base de la estructura creada con archivos
     void InsertaBinario(pnodoPas raiz, string cod, string nombre);
     nodoProducto* busquedaPro(nodoPasillo *nodoPas,nodoMarca* nodMar);
     arbolPas arbolProductos();
+    void MostrarPasillos(pnodoPas ra);
+    bool encontrarPasillo(bool encontrado,pnodoPas ra, string codPas);
+    void MostrarProductos(pnodoPas r, string codPas);
+    bool ValidarProducto1(pnodoPas ra, string codPas, string codProd, bool valido);
+    void MostrarMarcas(pnodoPas R, string codPas, string codProd);
+    bool validarMarca(pnodoPas ra, string codPas, string codProd, string codMar, bool valido);
+    pnodoMarca encontrarNodo1(pnodoPas ra, string codPas, string codProd, string codMar, pnodoMarca marca);
 };
 #endif // ARBOLPAS_H

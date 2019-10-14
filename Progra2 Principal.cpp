@@ -11,9 +11,12 @@
 #include "headers/arbolPas.h"
 #include "headers/arbolInventario.h"
 #include "headers/arbolb.h"
-#include "Principal.h"
-
+#include "headers/Principal.h"
 using namespace std;
+/*
+Metodos simples de insertar, mostrar ect
+*/
+//Ciudad:
 void Ciudad::Mostrar()
 {
     nodoCiudad *aux;
@@ -56,6 +59,7 @@ void Ciudad::InsertarFinal(int cod, string nom)
                 aux->siguiente=new nodoCiudad(cod, nom);
         }
 }
+//Marcas
 pnodoMarca RN::insertarNodo(pnodoMarca raiz, pnodoMarca pt){
 	if (raiz == NULL)
         return pt;
@@ -193,6 +197,16 @@ void RN::insert(const string &codPasilo,const string &nombre,const string &codPr
 	raiz = insertarNodo(raiz, pt);
 	balancearArbol(raiz, pt);
 }
+void RN:: InordenMar(pnodoMarca R){
+ if(R==NULL){
+        return;
+    }else{
+        InordenMar(R->hIzq);
+        cout<<R->codPasillo<<"~"<<R->codProducto<<"~"<<R->codMarca<<"~"<<R->nombre<<"~"<<R->cantGondola<<"~"<<R->precio<<"/";
+        InordenMar(R->hDer);
+    }
+}
+//Listas para codigos repetidos
 int lista::largoLista(){
     int cont=0;
 
@@ -271,8 +285,6 @@ void lista::MostrarMar()
        cout << "No hay elementos";
    else
    {
-
-
    		R = primeroMar;
 		while(R)
 		{
@@ -282,6 +294,7 @@ void lista::MostrarMar()
 		cout << endl;
    }
 }
+//Pasillos
 void arbolPas::InordenI(pnodoPas R){
     if(R==NULL){
         return;
@@ -342,10 +355,22 @@ partir de archivos
         bool rep=false;;
         pasillos.InsertaBinario(pasillos.raiz,cod, nom);
     }
-    //pasillos.InordenI(pasillos.raiz);
     archivo.close();
     return pasillos;
 }
+void arbolPas::InordenTriple(pnodoPas R){
+    if(R==NULL){
+        return;
+    }else{
+        InordenTriple(R->hIzq);
+        cout<<"||"<<R->codPasillo<<"~"<<R->nombre;
+        AVLProducto pro;
+        pro.raiz=R->subsiguiente;
+        pro.InordenPro(R->subsiguiente);
+        InordenTriple(R->hDer);
+    }
+}
+//Productos
 void AVLProducto::InsertarBalanceado(nodoProducto *aux, nodoProducto *ra, bool Hh, string codPas, string codProd, string nomProd){
     pnodoProd n1;
     stringstream cp(codProd);
@@ -495,6 +520,19 @@ void AVLProducto::RotacionSimpleIzquierda(nodoProducto* n, nodoProducto* n1){
     }
     n=n1;
 }
+void AVLProducto::InordenPro(pnodoProd R){
+    if(R==NULL){
+        return;
+    }else{
+        InordenPro(R->hIzq);
+        cout<<"|||"<<R->codPasillo<<"~"<<R->codProducto<<R->nombre<<"||||";
+        RN mar;
+        mar.raiz=R->subsiguiente;
+        mar.InordenMar(R->subsiguiente);
+        InordenPro(R->hDer);
+    }
+}
+//Inventario
 pnodoInventario ArbolInventario::insertar(int conca, string codPas, string nom, string codPro, string codMar, int cantStk, bool canasta, pnodoInventario aux)
 {
     if (aux==NULL){
@@ -554,39 +592,7 @@ pnodoInventario ArbolInventario::rotarDerecha(pnodoInventario aux)
     otro->hIzq=aux;
     return otro;
 }
-void RN:: InordenMar(pnodoMarca R){
- if(R==NULL){
-        return;
-    }else{
-        InordenMar(R->hIzq);
-        cout<<R->codPasillo<<"~"<<R->codProducto<<"~"<<R->codMarca<<"~"<<R->nombre<<"~"<<R->cantGondola<<"~"<<R->precio<<"/";
-        InordenMar(R->hDer);
-    }
-}
-void AVLProducto::InordenPro(pnodoProd R){
-    if(R==NULL){
-        return;
-    }else{
-        InordenPro(R->hIzq);
-        cout<<"|||"<<R->codPasillo<<"~"<<R->codProducto<<R->nombre<<"||||";
-        RN mar;
-        mar.raiz=R->subsiguiente;
-        mar.InordenMar(R->subsiguiente);
-        InordenPro(R->hDer);
-    }
-}
-void arbolPas::InordenTriple(pnodoPas R){
-    if(R==NULL){
-        return;
-    }else{
-        InordenTriple(R->hIzq);
-        cout<<"||"<<R->codPasillo<<"~"<<R->nombre;
-        AVLProducto pro;
-        pro.raiz=R->subsiguiente;
-        pro.InordenPro(R->subsiguiente);
-        InordenTriple(R->hDer);
-    }
-}
+//Crear Estructuras
 lista lista::enlistarCodigos(){
     lista listaAlm;
     ifstream archivo;
@@ -744,16 +750,13 @@ void AVLProducto::EnlaceRN(nodoProducto *nodoPro, nodoMarca *nodoMar){
 }
 nodoProducto* arbolPas::busquedaPro(nodoPasillo *nodoPas,nodoMarca* nodoMar){
     if(nodoPas==NULL){
-    //    cout<<"nulo"<<endl;
     }else{
         busquedaPro(nodoPas->hIzq, nodoMar);
         if(nodoPas->codPasillo==nodoMar->codPasillo)
         {
         	if(nodoPas->subsiguiente==NULL){
-            //    cout<<"nulo"<<endl;
         	}
         	else{
-                //cout<<nodoPas->codPasillo<<nodoMar->codPasillo<<endl;
                 AVLProducto arbol;
                 arbol.raiz=nodoPas->subsiguiente;
         	    arbol.EnlaceRN(nodoPas->subsiguiente,nodoMar);
@@ -762,8 +765,7 @@ nodoProducto* arbolPas::busquedaPro(nodoPasillo *nodoPas,nodoMarca* nodoMar){
         busquedaPro(nodoPas->hDer, nodoMar);
     }
 }
-RN RN::arbolMarcas(){
-//    AVLProducto arbolProd;
+arbolPas RN::arbolMarcas(){
 	lista listaCod;
 	listaCod=listaCod.enlistarCodigosMar();
 	arbolPas arbolPasillo;
@@ -771,14 +773,11 @@ RN RN::arbolMarcas(){
 	pnodoMarca aux=listaCod.primeroMar;
 	for(int i=0; i<listaCod.largoListaMar();i++)
     {
-//        cout<<aux->nombre<<endl;
        pnodoProd encont=arbolPasillo.busquedaPro(arbolPasillo.raiz, aux);
- //       cout<<"sale"<<endl;
-//        cout<<"encont "<<encont->nombre<<endl;
-//        EnlaceRN(encont->subsiguiente,aux);
        aux=aux->siguiente;
     }
     arbolPasillo.InordenTriple(arbolPasillo.raiz);
+    return arbolPasillo;
 }
 Ciudad Ciudad::agregarCiudades(){
     Ciudad listaCiudades;
@@ -1156,52 +1155,534 @@ void ArbolB::cargarAdmins(string pNombreArchivo){
     }
     archivo.close();
 }
-bool Principal::validarCliente(Pagina *r, string ced)
-{
-    ArbolB arbol=ArbolB(5);
-    arbol.obtenerRaiz();
-    if(r)
-    {
-        arbol.inOrden(r->obtenerRama(0));
-        for (int k = 1; k <= r->obtenerCuenta(); k++)
-        {
-            if(r->obtenerDato(k, 0)==ced)
-                return true;
-            arbol.inOrden(r->obtenerRama(k));
+//Funcionalidad
+//Comprar
+void arbolPas::MostrarProductos(pnodoPas R, string codPas){
+    if(R==NULL){
+        return;
+    }else{
+        MostrarProductos(R->hIzq, codPas);
+        if (R->codPasillo==codPas){
+            AVLProducto pro;
+            pro.raiz=R->subsiguiente;
+            pro.MostrarProductos(R->subsiguiente);
         }
+        MostrarProductos(R->hDer, codPas);
+    }
+}
+void AVLProducto::MostrarProductos(pnodoProd R){
+    if(R==NULL){
+        return;
+    }else{
+        MostrarProductos(R->hIzq);
+
+        cout<<R->nombre<<" "<<R->codProducto<<endl;
+        MostrarProductos(R->hDer);
+    }
+}
+void arbolPas::MostrarPasillos(pnodoPas ra){
+    if (ra==NULL){
+        return;
+    }
+    else{
+        MostrarPasillos(ra->hIzq);
+        cout<<ra->nombre<<" "<<ra->codPasillo<<endl;
+        MostrarPasillos(ra->hDer);
+    }
+}
+bool arbolPas::encontrarPasillo(bool encontrado, pnodoPas ra, string codPas){
+    if (ra==NULL){
+    }
+    else{
+        encontrado=encontrarPasillo(encontrado, ra->hIzq, codPas);
+        if (codPas==ra->codPasillo){
+            encontrado=true;
+        }
+        encontrado=encontrarPasillo(encontrado, ra->hDer, codPas);
+    }
+    return encontrado;
+
+}
+bool arbolPas::ValidarProducto1(pnodoPas R, string codPas,string codProd ,bool valido){
+    if(R==NULL){
+    }else{
+        valido=ValidarProducto1(R->hIzq, codPas, codProd, valido);
+        if (R->codPasillo==codPas){
+            AVLProducto pro;
+            pro.raiz=R->subsiguiente;
+            valido=pro.validarProducto2(R->subsiguiente,codPas, codProd, valido);
+
+        }
+        valido=ValidarProducto1(R->hDer, codPas, codProd, valido);
+    }
+    return valido;
+}
+bool AVLProducto::validarProducto2(pnodoProd ra,string codPas, string codProd, bool valido){
+    if(ra==NULL){
+    }else{
+        valido=validarProducto2(ra->hIzq, codPas, codProd, valido);
+        if (codProd==ra->codProducto){
+            valido=true;
+        }
+        valido=validarProducto2(ra->hDer, codPas, codProd, valido);
+
+    }
+    return valido;
+}
+void arbolPas::MostrarMarcas(pnodoPas R, string codPas, string codProd){
+    if(R==NULL){
+        return;
+    }else{
+        MostrarMarcas(R->hIzq, codPas, codProd);
+        if (R->codPasillo==codPas){
+            AVLProducto pro;
+            pro.raiz=R->subsiguiente;
+            pro.MostrarMarcas2(R->subsiguiente, codProd);
+        }
+        MostrarMarcas(R->hDer, codPas, codProd);
+    }
+}
+void AVLProducto::MostrarMarcas2(pnodoProd R, string codProd){
+    if(R==NULL){
+    }else{
+        MostrarMarcas2(R->hIzq, codProd);
+        if (codProd==R->subsiguiente->codProducto){
+            RN mar;
+            mar.MostrarMarcas3(R->subsiguiente);
+        }
+        MostrarMarcas2(R->hDer, codProd);
+    }
+}
+void RN::MostrarMarcas3(pnodoMarca R){
+ if(R==NULL){
+    }else{
+        MostrarMarcas3(R->hIzq);
+        cout<<R->nombre<<" "<<R->codMarca<<" // "<<R->cantGondola<<" "<<R->precio<<endl;
+        MostrarMarcas3(R->hDer);
+    }
+}
+bool arbolPas::validarMarca(pnodoPas ra, string codPas, string codProd, string codMar, bool valido){
+    if(ra==NULL){
+    }else{
+        valido=validarMarca(ra->hIzq, codPas, codProd,codMar, valido);
+        if (ra->codPasillo==codPas){
+            AVLProducto pro;
+            pro.raiz=ra->subsiguiente;
+            valido=pro.validarMarcas2(ra->subsiguiente, codProd,codMar, valido);
+
+        }
+        valido=validarMarca(ra->hDer, codPas, codProd, codMar, valido);
+    }
+    return valido;
+}
+bool AVLProducto::validarMarcas2(pnodoProd ra, string codProd, string codMar, bool found){
+    if(ra==NULL){
+    }else{
+        found=validarMarcas2(ra->hIzq, codProd, codMar, found);
+        if (codProd==ra->subsiguiente->codProducto){
+            RN marcas;
+            found=marcas.validarMarcas3(ra->subsiguiente,codMar, found);
+        }
+        found=validarMarcas2(ra->hDer,codProd, codMar, found);
+
+    }
+    return found;
+}
+bool RN::validarMarcas3(pnodoMarca ra, string codMar,bool encontrado){
+    pnodoMarca marca;
+    if(ra==NULL){
+    }else{
+        encontrado=validarMarcas3(ra->hIzq,codMar,encontrado);
+        if (codMar==ra->codMarca){
+            encontrado=true;
+            marca=ra;
+        }
+        encontrado=validarMarcas3(ra->hDer,codMar, encontrado);
+
+    }
+    return encontrado;
+}
+pnodoMarca arbolPas::encontrarNodo1(pnodoPas ra, string codPas, string codProd, string codMar, pnodoMarca marca){
+    bool var=false;
+    if(ra==NULL){
+    }else{
+        marca=encontrarNodo1(ra->hIzq, codPas, codProd,codMar, marca);
+        if (ra->codPasillo==codPas){
+            AVLProducto pro;
+            pro.raiz=ra->subsiguiente;
+            marca=pro.encontrarNodo2(ra->subsiguiente, codProd,codMar, marca);
+        }
+        marca=encontrarNodo1(ra->hDer, codPas, codProd, codMar, marca);
+    }
+    return marca;
+
+}
+pnodoMarca AVLProducto::encontrarNodo2(pnodoProd ra, string codProd, string codMar, pnodoMarca marca){
+    if(ra==NULL){
+    }else{
+        marca=encontrarNodo2(ra->hIzq,codProd,codMar, marca);
+        if (ra->codProducto==codProd){
+            RN marcas;
+            marcas.raiz=ra->subsiguiente;
+            marca=marcas.encontrarNodo3(ra->subsiguiente,codMar, marca);
+        }
+        marca=encontrarNodo2(ra->hDer, codProd, codMar, marca);
+    }
+    return marca;
+}
+pnodoMarca RN::encontrarNodo3(pnodoMarca ra, string codMar, pnodoMarca marca){
+    bool var=false;
+    if(ra==NULL){
+    }else{
+        marca=encontrarNodo3(ra->hIzq, codMar, marca);
+        if (ra->codMarca==codMar){
+            marca=ra;
+        }
+        marca=encontrarNodo3(ra->hDer,codMar, marca);
+    }
+    return marca;
+}
+void Principal::escogerPasillo(arbolPas pasillos){
+    cout<<"Estos son las opciones de pasillos: "<<endl;
+    cout<<"Nombre / Codigo"<<endl;
+    pasillos.MostrarPasillos(pasillos.raiz);
+    cout<<"Escoja el codigo de pasillo que desea: "<<endl;
+    string codigo;
+    cin>>codigo;
+    bool pasilloValido=false;
+    pasilloValido=pasillos.encontrarPasillo(pasilloValido, pasillos.raiz, codigo);
+    if (pasilloValido==true){
+        cout<<"Las opciones de productos son: "<<endl;
+        escogerProducto(pasillos, codigo);
+    }
+    else{
+        cout<<"Pasillo no encontrado. Presione 1 si desea seguir comprando u otra cosa sino: "<<endl;
+        string dec;
+        cin>>dec;
+        if(dec=="1"){
+            escogerPasillo(pasillos);
+        }
+        else {
+            cout<<"Gracias por su compra!"<<endl;
+        }
+    }
+
+}
+void Principal::escogerProducto(arbolPas pasillos, string codPas){
+    cout<<"Nombre Producto / Codigo Producto"<<endl;
+    pasillos.MostrarProductos(pasillos.raiz, codPas);
+    cout<<"Seleccione el codigo de producto que desea: "<<endl;
+    string codProd;
+    cin>>codProd;
+    bool productoValido=false;
+    productoValido=pasillos.ValidarProducto1(pasillos.raiz, codPas,codProd ,productoValido);
+    if (productoValido){
+        cout<<"Las opciones de marcas son: "<<endl;
+        escogerMarca(pasillos, codPas, codProd);
+    }
+    else{
+        cout<<"El codigo de producto que selecciono es incorrecto, presione 1 si desea seguir comprando, cualquier otra cosa sino: "<<endl;
+        string dec;
+        cin>>dec;
+        if(dec=="1"){
+            cout<<"Si desea escoger otro producto del mismo pasillo dijite 1, si desea escoger otro pasillo digite cualquier tecla: "<<endl;
+            string dec2;
+            cin>>dec2;
+            if (dec2=="1"){
+                escogerProducto(pasillos, codPas);
+            }
+            else{
+                escogerPasillo(pasillos);
+            }
+        }
+        else{
+            cout<<"Gracias por su compra!"<<endl;
+        }
+    }
+}
+void Principal::escogerMarca(arbolPas pasillos,string codPas, string codProd){
+    cout<<"Nombre Marca / Codigo Marca // Cantidad / Precio por unidad"<<endl;
+    pasillos.MostrarMarcas(pasillos.raiz, codPas, codProd);
+    cout<<"Digite el codigo de la marca que desea: "<<endl;
+    string codMar;
+    cin>>codMar;
+    bool encontrado=false;
+    encontrado=pasillos.validarMarca (pasillos.raiz, codPas, codProd, codMar, encontrado);
+    if (encontrado){
+        cout<<"Escriba la cantidad que desea: "<<endl;
+        int absoluto;
+        cin>>absoluto;
+        int cant1;
+        cant1=abs(absoluto);
+        if(!cin)
+        {
+            cin.clear();
+            cin.ignore();
+            cout<<"Entrada incorrecta, ingrese solo numeros: "<<endl;
+            cin>>cant1;
+        }
+        pnodoMarca mar;
+        mar=pasillos.encontrarNodo1(pasillos.raiz, codPas, codProd, codMar, mar);
+        if (mar->cantGondola>=cant1){
+            //Hacer la cola para agregar a la pila
+            mar->cantGondola=((mar->cantGondola)-cant1);
+            cout<<"Producto agregado con exito al carrito\nDesea seguir comprando? Presione 1 para Si o cualquier tecla para no: "<<endl;
+            string resp;
+            cin>>resp;
+            if(resp=="1")
+                escogerPasillo(pasillos);
+            else
+            {
+                cout<<"Gracias por su compra, pronto se le cobraran sus articulos."<<endl;
+                //menuCliente(); //Hacer bien, meter los paráemtros
+            }
+        }
+        else if(mar->cantGondola<cant1&&mar->cantGondola!=0){
+            cout<<"La cantidad de que existe de esta marca es menor de la que usted solicita.\nSolo hay: "<<mar->cantGondola<<endl;
+            cout<<"Usted puede:"<<endl;
+            cout<<"1)Llevarse la cantidad que hay\n2)Escoger otra marca del mismo producto.\n3)Escoger otro producto del mismo pasillo\n4)Escoger otro pasillo\nOtro)Dejar de comprar\nDigite la opcion que desea: "<<endl;
+            string dec2;
+            cin>>dec2;
+            if (dec2=="2"){
+                escogerMarca(pasillos,codPas, codProd);
+            }
+            else if (dec2=="3"){
+                escogerProducto(pasillos,codPas);
+            }
+            else if(dec2=="4"){
+                escogerPasillo(pasillos);
+            }
+            else if (dec2=="1")
+            {
+                //Hacer cola para agregar a pila
+                mar->cantGondola=0;
+                cout<<"Producto agregado con exio al carrito\nDesea seguir comprando? Presione 1 para Si o cualquier tecla para no: "<<endl;
+                string resp;
+                cin>>resp;
+                if(resp=="1")
+                    escogerPasillo(pasillos);
+                else{
+                    cout<<"Gracias por su compra, pronto se le cobrarán sus artículos."<<endl;
+                    //menuCliente(); //Hacer el metodo y agregar los parametros
+                }
+            }
+            else{
+                cout<<"Gracias por su compra!"<<endl;
+            }
+        }
+        else if (mar->cantGondola==0)
+        {
+            cout<<"Lamentamos el incoveniente, pero en este momento no tenemos unidades de la marca seleccionada."<<endl;
+            cout<<"Usted puede:"<<endl;
+            cout<<"1)Escoger otra marca del mismo producto.\n2)Escoger otro producto del mismo pasillo\n3)Escoger otro pasillo\nOtro)Dejar de comprar\nDigite la opcion que desea: "<<endl;
+            string dec2;
+            cin>>dec2;
+            if (dec2=="1"){
+                escogerMarca(pasillos,codPas, codProd);
+            }
+            else if (dec2=="2"){
+                escogerProducto(pasillos,codPas);
+            }
+            else if(dec2=="3"){
+                escogerPasillo(pasillos);
+            }
+            else{
+                //menuCliente(); //Hacer
+            }
+        }
+
+    }
+    else{
+        cout<<"El codigo de marca que ingreso es incorrecto."<<endl;
+        cout<<"1)Escoger otra marca del mismo producto.\n2)Escoger otro producto del mismo pasillo\n3)Escoger otro pasillo\nOtro)Dejar de comprar\nDigite la opcion que desea: "<<endl;
+        string dec2;
+        cin>>dec2;
+        if (dec2=="1"){
+            escogerMarca(pasillos,codPas, codProd);
+        }
+        else if (dec2=="2"){
+            escogerProducto(pasillos,codPas);
+        }
+        else if(dec2=="3"){
+            escogerPasillo(pasillos);
+        }
+        else{
+            cout<<"Gracias por su compra!"<<endl;
+        }
+    }
+
+}
+void Principal::comprar(arbolPas pasillos){
+    escogerPasillo(pasillos);
+}
+//Ingresar
+//Cola de clientes, log in
+//bool Principal::agregarCliente(colaCliente, string ced)
+//{
+//    pnodoCola aux=colaCliente.primero;
+//    while (aux!=NULL){
+//        if(aux->cedula==ced)
+//            return false;
+//        aux=aux->siguiente;
+//    }
+//    return true;
+//}
+bool Principal::validarCliente(ArbolB cliente, string ced)
+{
+    int k;
+    stringstream var(ced);
+    int cedula;
+    var>>cedula;
+    Pagina *pag=new Pagina(5);
+    pag=cliente.buscar(cedula, k);
+    if (pag!=NULL){
+        return true;
+    }
+    else{
+        cout<<"No existe ningun cliente con ese numero de cedula";
         return false;
     }
 }
+bool Principal::validarAdministrador(ArbolB administrador, string cod){
+    int k;
+    stringstream var(cod);
+    int codigo;
+    var>>codigo;
+    Pagina *pag=new Pagina(5);
+    pag=administrador.buscar(codigo, k);
+    if (pag!=NULL){
+        return true;
+    }
+    else{
+        cout<<"No existe ningun administrador con ese codigo";
+        return false;
+    }
+}
+void Principal::agregarCola(ArbolB cliente, string cedula){
+    int k;
+    stringstream var(cedula);
+    int cedulaa;
+    var>>cedula;
+    Pagina *pag=new Pagina(5);
+    pag=cliente.buscar(cedulaa, k);
+    bool validar=validarCliente(cliente, cedula);
+    if (validar){
+        if (cola.ListaVacia()){
+            cola.InsertarFinal(cedula, *pag->obtenerDato(k, 0), *pag->obtenerDato(k, 1),*pag->obtenerDato(k, 2), *pag->obtenerDato(k, 3), *pag->obtenerDato(k, 4));
+        }
+        else{
+            bool rep;
+            rep=agregarCliente(colaCliente, cedula);
+            if (rep==false){
+                cola.InsertarFinal(cedula, *pag->obtenerDato(k, 0), *pag->obtenerDato(k, 1),*pag->obtenerDato(k, 2), *pag->obtenerDato(k, 3), *pag->obtenerDato(k, 4));
+            }
+        }
+    }
+}
+void Principal::login(ArbolB administradores, ArbolB clientes, string cedula){
+    if(validarCliente(clientes,cedula)){
+        menuCliente();
+    }
+    else if (validarAdministrador(administradores, cedula)){
+        menuAdministrador();
+    }
+    else{
+        cout<<"Usted no esta registrado como cliente ni como administrador, desea ingresar como invitado o enviar una solicitud para ser regsitrado?\nDigite 1 para enviar la solicitud u otra cosa para entrar como invitado: "<<endl;
+        string dec;
+        cin>>dec;
+        if(dec=="1"){
+            //Enviar solicitud, preguntar a Fabrizio
+        }
+        else{
+            menuInvitado();
+        }
+    }
+}
+//void Principal::menuCliente(arbolPas pasillos, AVLProducto productos, RN marcas, ArbolInventario inventario)
+//{
+//    cout<<"1)\nComprar\n2)Consultar precio\n3)Consultar si es de canasta\n)4)Consultar Impuesto, \n5)Salir"
+//    cout<<"Digite el numero de lo que desea realizar: ";
+//    string opc;
+//    cin>>opc;
+//    if(opc=="1")
+//    {
+//        comprar(pasillos, productos, marcas, inventario); //Terminar
+//    }
+//    else if (opc=="2")
+//    {
+//        if (cola.ListaVacia()==true){
+//            cout<<"No puede hacer cobros porque no hay ningun cliente en la cola de espera."<<endl;
+//            menu(listaPas, cliente, inventario);
+//        }
+//        pagar(listaPas,cliente,inventario);
+//        cout<<"Lista en el menu: ";
+//        listaVent.Mostrar();
+//    }
+//    else if(opc=="3")
+//    {
+//        if (listaVent.ListaVacia()&&listaVentCopia.ListaVacia()){
+//            cout<<"No puede recargar la gondola ya que la lista de ventas esta vacia."<<endl;
+//            menu(listaPas, cliente, inventario);
+//        }
+//        if (lisVent==true)
+//            lisVent=false;
+//        else
+//            lisVent=true;
+//        rellenarGondolas(listaPas,cliente, inventario);
+//    }
+//    else if (opc=="4")
+//    {
+//        if(listaVent.ListaVacia()&&listaVentCopia.ListaVacia()){
+//            cout<<"No se puede recargar el inventario porque la lista de ventas esta vacia."<<endl;
+//            menu(listaPas, cliente, inventario);
+//        }
+//        rellenarInventario(listaPas,cliente, inventario);
+//    }
+//    else if (opc=="5")
+//    {
+//        escogerReporte(listaPas, cliente, inventario);
+//    }
+//    else if (opc=="6")
+//    {
+//        cout<<"Gracias por comprar en nuestro sistema.";
+//        exit(1);
+//    }
+//    else
+//    {
+//        cout<<"Indicacion invalida, trate con los numeros 1, 2, 3, 4, 5 o 6"<<endl;
+//        menu(listaPas, cliente, inventario);
+//    }
+//
+//}
 int main()
 {
+    arbolPas pasillos;
     RN arbol;
     Ciudad ciudad;
     ArbolInventario inven;
     Principal principal;
-    arbol.arbolMarcas();
+    pasillos=arbol.arbolMarcas();
     Pagina *actual;
-    ArbolB arbolCli=ArbolB(5);
-    ArbolB arbolAdm=ArbolB(5);
-    cout<<"\n"<<endl;
-    ciudad.agregarCiudades();
-    cout<<endl;
-    inven.agregarInventario();
-    cout<<endl;
-    arbolCli.cargarClientes("Clientes.txt");
-    arbolCli.escribir();
-    cout<<endl;
-    arbolAdm.cargarAdmins("Administradores.txt");
-    arbolAdm.escribir();
-    cout<<"dsfsdfsd "<<arbolCli.obtenerRaiz()->obtenerClave(0);
-    cout<<endl;
-    bool cliente=principal.validarCliente(arbolCli.obtenerRaiz(), "1234567");
-    if (cliente==true){
-        cout<<"hola"<<endl;
-    }
-    else{
-        cout<<"adios"<<endl;
-    }
-    cout<<endl;
+//    ArbolB arbolAdm=ArbolB(5);
+//    cout<<"\n"<<endl;
+//    ciudad.agregarCiudades();
+//    cout<<endl;
+//    inven.agregarInventario();
+//    cout<<endl;
+    ArbolB cliente=ArbolB(5);
+    cliente.cargarClientes("Clientes.txt");
+   // cliente.escribir();
+   // arbolCli.cargarClientes("Clientes.txt");
+    //arbolCli.escribir();
+   // cout<<endl;
+   // arbolAdm.cargarAdmins("Administradores.txt");
+   // arbolAdm.escribir();
+   // cout<<endl;
+   //cout<<"Ingrese su numero de cedula: "<<endl;
+  // string cedula;
+   //cin>>cedula;
+//   principal.login(cliente, cedula);
+    principal.comprar(pasillos);
     cout<<"fin del main";
     cin.get();
     return 0;

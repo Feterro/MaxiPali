@@ -8,7 +8,6 @@
 #include <bits/stdc++.h>
 #include "nodos.h"
 using namespace std;
-
 class Ciudad {
    public:
     Ciudad() { primero = actual = NULL; }

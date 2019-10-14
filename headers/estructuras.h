@@ -2,7 +2,7 @@
 #include <fstream>
 #include <cstring>
 #include <string>
-#include <sstream>
+#include <sstream> //De la progra vieja
 using namespace std;
 
 class nodoInventario {

@@ -23,6 +23,7 @@ public:
         this->orden = 0;
         this->raiz = NULL;
     }
+
     explicit ArbolB(int m)
     {
         this->orden = m;
@@ -49,5 +50,6 @@ public:
     void cargarAdmins(string pNombreArchivo);
 
     void insertar(tipoClave cl, string nombre, string telefono, string codigoCiudad, string correo);
+    friend class Principal;
 };
 #endif // ARBOLB_H

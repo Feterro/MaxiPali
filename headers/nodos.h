@@ -53,6 +53,7 @@ Clase amiga de lista marcas y la clase principal.
    friend class arbolPas;
    friend class RN;
    friend class lista;
+   friend class Principal;
 };
 typedef nodoMarca*pnodoMarca;
 class nodoProducto {
@@ -107,7 +108,6 @@ listaSimple y nodoCarrito
         hDer=NULL;
         subsiguiente=NULL;
     }
-
    private:
     string codPasillo;
     string nombre;
@@ -118,6 +118,7 @@ listaSimple y nodoCarrito
    friend class arbolPas;
    friend class AVLProducto;
    friend class RN;
+   friend class Principal;
 };
 typedef nodoPasillo *pnodoPas;
 class nodoCiudad{
@@ -219,4 +220,35 @@ public:
     int obtenerCuenta(){ return this->cuenta; }
     void cambiarCuenta(int valor) { this->cuenta = valor; }
 };
+class nodoCola {
+   public:
+    nodoCola(string ced, string nom, string tel, string correo)
+    {
+       cedula=ced;
+       nombre=nom;
+       telefono=tel;
+       correoC=correo;
+       siguiente = NULL;
+    }
+
+nodoCola(string ced, string nom, string tel, string correo, nodoCola * signodo)
+    {
+       cedula=ced;
+       nombre=nom;
+       telefono=tel;
+       correoC=correo;
+       siguiente = signodo;
+    }
+
+   private:
+    string cedula;
+    string telefono;
+    string correoC;
+    string nombre;
+    nodoCola *siguiente;
+
+   friend class colaCliente;
+   friend class Principal;
+};
+typedef nodoCola *pnodoCola;
 #endif // NODOS_H

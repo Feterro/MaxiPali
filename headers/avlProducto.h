@@ -8,7 +8,6 @@
 #include <bits/stdc++.h>
 #include "nodos.h"
 using namespace std;
-
 class AVLProducto{
 public:
     pnodoProd raiz;
@@ -23,6 +22,11 @@ public:
     void EnlaceAvl(nodoPasillo *nodoPas,nodoProducto *nodoPro);
     void InordenPro(pnodoProd R);
     void EnlaceRN(nodoProducto *nodoPro, nodoMarca *nodoMar);
+    void MostrarProductos(pnodoProd ra);
+    bool validarProducto2(pnodoProd ra,string codPas, string codProd, bool valido);
+    void MostrarMarcas2(pnodoProd ra, string codProd);
+    bool validarMarcas2(pnodoProd ra,string codProd, string codMar, bool valido);
+    pnodoMarca encontrarNodo2(pnodoProd ra, string codProd, string codMar, pnodoMarca marca);
 
     friend class lista;
 };

@@ -7,9 +7,8 @@
 #include <sstream>
 #include <bits/stdc++.h>
 #include "nodos.h"
+#include "arbolPas.h"
 using namespace std;
-
-
 class RN{
 public:
     nodoMarca *raiz;
@@ -21,6 +20,9 @@ public:
 	void levelOrder();
 	pnodoMarca insertarNodo(pnodoMarca raiz, pnodoMarca pt);
 	void InordenMar(pnodoMarca R);
-	RN arbolMarcas();
+	arbolPas arbolMarcas();
+	void MostrarMarcas3(pnodoMarca ra);
+	bool validarMarcas3(pnodoMarca ra, string codMar,bool encontrado);
+	pnodoMarca encontrarNodo3(pnodoMarca ra, string codMar, pnodoMarca marca);
 };
 #endif // ROJINEGRO_H

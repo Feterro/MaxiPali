@@ -8,7 +8,6 @@
 #include <bits/stdc++.h>
 #include "nodos.h"
 using namespace std;
-
 class lista {
    public:
     lista() { primero = actual = NULL; primeroMar = actualMar= NULL; }
@@ -23,6 +22,7 @@ class lista {
     void MostrarMar();
     lista enlistarCodigos();
     lista enlistarCodigosMar();
+    bool verificarCedula();
 
 
    private:
